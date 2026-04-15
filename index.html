@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Google Craft PTP (Pre-Task Planning) safety audit assistant interactive application.">
+    <title>Google Craft PTP Agent - Interactive Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for modern aesthetics -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Persistent App Header -->
+    <header class="app-header">
+        <div class="logo-area">
+            <div class="logo-symbol">G</div>
+            <div class="title-stack">
+                <h1>Craft PTP Agent</h1>
+                <span class="site-tag">UNO3 Campus - Omaha, Nebraska</span>
+            </div>
+        </div>
+        <div class="status-indicators">
+            <div class="indicator"><span class="dot green"></span> P6 Schedule Connected</div>
+            <div class="indicator"><span class="dot green"></span> SSSP Synced</div>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="app-main">
+        <!-- Sidebar Control Dashboard (For Presenter/Crew simulation toggles) -->
+        <aside class="sidebar-controls">
+            <h2>Simulation Scenes</h2>
+            <p class="sidebar-desc">Select the active stage to walk through continuous interactions during the daily shift.</p>
+            <nav class="scene-nav">
+                <button class="scene-btn active" id="scene-1-btn" data-scene="1">
+                    <strong>Morning Huddle</strong>
+                    <span>Plan generation & review</span>
+                </button>
+                <button class="scene-btn" id="scene-2-btn" data-scene="2">
+                    <strong>Take Two (Midday)</strong>
+                    <span>Periodic Stop Work check</span>
+                </button>
+                <button class="scene-btn" id="scene-3-btn" data-scene="3">
+                    <strong>End of Shift</strong>
+                    <span>Plus/Delta Session</span>
+                </button>
+            </nav>
+            <div class="system-log" id="activity-log">
+                <h3>System Actions</h3>
+                <ul id="log-list">
+                    <li>Agent online at UNO3...</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Chat Core Layout -->
+        <section class="chat-stage">
+            <!-- Visual cue screen top (used for big STOP SIGNS and mock connection cues) -->
+            <div class="visual-cue-board" id="visual-board">
+                <div class="cue-content" id="cue-text">System idle. Waiting for shift updates...</div>
+            </div>
+
+            <!-- Chat conversation messages -->
+            <div class="chat-history" id="chat-window">
+                <div id="chat-scene-1" class="scene-layer active"></div>
+                <div id="chat-scene-2" class="scene-layer"></div>
+                <div id="chat-scene-3" class="scene-layer"></div>
+            </div>
+
+            <!-- Interactive Input Bar -->
+            <div class="chat-input-area">
+                <div class="interactive-forms" id="interactive-forms">
+                    <!-- Dynamic forms (like the Take Two checkbox) spawn here -->
+                </div>
+                <form id="message-form" class="message-form">
+                    <input type="text" id="user-input" placeholder="Report your crew status or request safety guidance..." autocomplete="off">
+                    <button type="submit" id="send-btn">Send</button>
+                </form>
+                <div class="presenter-actions">
+                    <!-- Quick presenter templates -->
+                    <button class="quick-btn" id="preset-btn-1">"We are at UNO3... cable in aisle 3"</button>
+                    <button class="quick-btn" id="preset-btn-2">"The aisle is congested... lift blocked"</button>
+                    <button class="quick-btn" id="preset-btn-3">"The plan worked. Delta: sharp edges"</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
