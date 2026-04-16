@@ -22,21 +22,19 @@ let currentScene = 1;
 let sceneStepIndex = 0;
 let currentSessionSuffix = Date.now().toString();
 const chatWindow = document.getElementById("chat-window");
-const visualBoard = document.getElementById("visual-board");
-const cueText = document.getElementById("cue-text");
 const interactiveForms = document.getElementById("interactive-forms");
 const logList = document.getElementById("log-list");
 
 const allShortcutIds = ["btn_cable_pull", "btn_yes", "btn_no", "btn_new_members", "btn_ready"];
 
 // Setup quick preset buttons
-function updatePresets() {
+function updatePresets(sceneNum = currentScene) {
     allShortcutIds.forEach(id => {
         const btn = document.getElementById(id);
         if (btn) btn.style.display = "none";
     });
 
-    const presets = presetPrompts[currentScene] || [];
+    const presets = presetPrompts[sceneNum] || [];
     presets.forEach(item => {
         const btn = document.getElementById(item.id);
         if (btn) {
@@ -80,23 +78,35 @@ document.querySelectorAll(".scene-btn").forEach(btn => {
     btn.addEventListener("click", (e) => {
         document.querySelectorAll(".scene-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        currentScene = parseInt(btn.getAttribute("data-scene"));
-        sceneStepIndex = 0;
-        updatePresets();
         
-        document.querySelectorAll(".scene-layer").forEach(l => l.classList.remove("active"));
-        const tgt = document.getElementById("chat-scene-" + currentScene);
-        if (tgt) tgt.classList.add("active");
+        const selectedScene = parseInt(btn.getAttribute("data-scene"));
+        sceneStepIndex = 0;
         
         interactiveForms.innerHTML = "";
         
-        if (currentScene === 2) {
-            visualBoard.className = "visual-cue-board stop-sign";
-            cueText.textContent = "STOP WORK AUTHORITY: Take Two Pause Initiated";
+        if (selectedScene === 2) {
+            // Stay on Scene 1 agent, but load Scene 2 presets
+            updatePresets(2);
+            
+            // Display stop graphic in message pane
+            const activeLayer = document.getElementById("chat-scene-1");
+            if (activeLayer) {
+                const imgDiv = document.createElement("div");
+                imgDiv.className = "message-bubble agent";
+                imgDiv.innerHTML = '<img src="stop_work.png" alt="Stop Work Authority" style="max-width: 100%; border-radius: 8px; margin: 10px 0;">';
+                activeLayer.appendChild(imgDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+            
             addLog("Initiated midday periodic Stop Work authority check.");
         } else {
-            visualBoard.className = "visual-cue-board";
-            cueText.textContent = `Scene ${currentScene} initialized.`;
+            currentScene = selectedScene;
+            updatePresets();
+            
+            document.querySelectorAll(".scene-layer").forEach(l => l.classList.remove("active"));
+            const tgt = document.getElementById("chat-scene-" + currentScene);
+            if (tgt) tgt.classList.add("active");
+            
             addLog(`Navigated to Scene ${currentScene}`);
         }
     });
@@ -121,13 +131,10 @@ function renderChecklist(options, onSelect) {
 function handleScriptTriggers(agentText) {
     // Check for specific conditions from the script to trigger immersive UI
     if (agentText.includes("finalize the task-specific elements") || agentText.includes("choose all that apply")) {
-        visualBoard.textContent = "Verifying localized conditions...";
         renderChecklist(["Weather conditions", "New crew members", "Work area accessibility", "Egress", "Lighting"], (opt, sel) => {
             addLog(`Toggled ${opt}: ${sel}`);
         });
     } else if (agentText.includes("Take Two:") || agentText.includes("reassess your plan")) {
-        visualBoard.className = "visual-cue-board stop-sign";
-        cueText.textContent = "STOP SIGN: Periodic Change Audit in progress";
         renderChecklist(["Work Area Changes", "Tool Availability", "Material Availability", "Weather", "New Crew Members"], (opt, sel) => {});
     }
 }

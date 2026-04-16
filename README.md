@@ -34,3 +34,14 @@ uv run uvicorn backend.main:app --reload --port 8000
 
 ### 2. Access Simulation Center
 Simply click and interact online at: [http://localhost:8000](http://localhost:8000) with full multi-scene capabilities loaded out-of-the-box automatically! No other separate manual client nodes required to run!
+
+---
+
+## Remote Cloud Access (Local Proxying)
+
+Once successfully deployed to Google Cloud Run using `./deploy.sh`, you can securely bridge the hosted service back to your workstation via `gcloud proxy` without requiring manual authorization redirects:
+
+```bash
+gcloud run services proxy craft-ptp-demo --region us-central1 --port 8000
+```
+After opening the secure tunnel, navigate standardly to **[http://localhost:8000](http://localhost:8000)**. Your client presentation will route directly against the scalable remote backend APIs securely!
