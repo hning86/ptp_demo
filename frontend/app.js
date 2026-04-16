@@ -1,45 +1,69 @@
 const presetPrompts = {
     1: [
-        "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done.",
-        "We also have a new crew member today"
+        { id: "btn_cable_pull", label: "Pull Cable", text: "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done." },
+        { id: "btn_yes", label: "Yes", text: "Yes" },
+        { id: "btn_no", label: "No", text: "No" },
+        { id: "btn_new_members", label: "New Members", text: "We have 2 new crew members, ready for next step." },
+        { id: "btn_ready", label: "Ready", text: "We are ready to review the pre-task plan." }
     ],
     2: [
-        "Take Two",
-        "The aisle is now too congested with steel, and our hybrid scissor lift cannot access the work area anymore.",
-        "Yes, an extension ladder will work.",
-        "Updates accepted.",
-        "We are doing mostly fine. The new member does feel a little overwhelmed though.",
-        "No I think we are good."
+        { id: "btn_cable_pull", label: "Take Two", text: "Take Two" },
+        { id: "btn_yes", label: "Congestion", text: "The aisle is congested and the lift cannot access the work spot." },
+        { id: "btn_no", label: "Yes", text: "Yes, extension ladder works fine." },
+        { id: "btn_ready", label: "Good", text: "No, we are good to proceed." }
     ],
     3: [
-        "End of Shift",
-        "The plan worked. Delta: The pre-installed trays had sharp edges that snagged the low-voltage cable. We suggest adding edge-guards tomorrow before pulling to save time and prevent hand abrasions."
+        { id: "btn_cable_pull", label: "End Shift", text: "End of Shift" },
+        { id: "btn_yes", label: "Delta", text: "The plan worked. Delta: Pre-installed trays had sharp edges that slowed progress." }
     ]
 };
 
 let currentScene = 1;
 let sceneStepIndex = 0;
+let currentSessionSuffix = Date.now().toString();
 const chatWindow = document.getElementById("chat-window");
 const visualBoard = document.getElementById("visual-board");
 const cueText = document.getElementById("cue-text");
 const interactiveForms = document.getElementById("interactive-forms");
 const logList = document.getElementById("log-list");
-// Layer caching managed through persistent UI divs
+
+const allShortcutIds = ["btn_cable_pull", "btn_yes", "btn_no", "btn_new_members", "btn_ready"];
 
 // Setup quick preset buttons
 function updatePresets() {
+    allShortcutIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.style.display = "none";
+    });
+
     const presets = presetPrompts[currentScene] || [];
-    for (let i = 1; i <= 3; i++) {
-        const btn = document.getElementById(`preset-btn-${i}`);
-        if (btn && presets[i - 1]) {
-            btn.textContent = `"${presets[i - 1]}"`;
+    presets.forEach(item => {
+        const btn = document.getElementById(item.id);
+        if (btn) {
+            btn.textContent = item.label;
             btn.style.display = "inline-block";
             btn.onclick = () => {
-                document.getElementById("user-input").value = presets[i - 1];
+                document.getElementById("user-input").value = item.text;
             };
-        } else if (btn) {
-            btn.style.display = "none";
         }
+    });
+    
+    const resetBtn = document.getElementById("btn_reset");
+    if (resetBtn) {
+        resetBtn.onclick = async () => {
+            try {
+                currentSessionSuffix = Date.now().toString();
+                await fetch("/reset", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ session_id: "demo-stage-" + currentScene + "-" + currentSessionSuffix })
+                });
+                addLog("Resetting fully to a clean unique memory pool...");
+                setTimeout(() => window.location.reload(), 200);
+            } catch (err) {
+                window.location.reload();
+            }
+        };
     }
 }
 
@@ -110,6 +134,15 @@ function handleScriptTriggers(agentText) {
 
 // Send Message via Stream or Fallback
 const form = document.getElementById("message-form");
+const input = document.getElementById("user-input");
+
+input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        form.requestSubmit();
+    }
+});
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const input = document.getElementById("user-input");
@@ -134,10 +167,10 @@ form.addEventListener("submit", async (e) => {
     if (activeLayer) activeLayer.appendChild(agentDiv);
 
     try {
-        const res = await fetch(`http://localhost:8000/scene${currentScene}/chat`, {
+        const res = await fetch(`/scene${currentScene}/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ session_id: `demo-stage-${currentScene}`, message: msg })
+            body: JSON.stringify({ session_id: `demo-stage-${currentScene}-${currentSessionSuffix}`, message: msg })
         });
         
         const reader = res.body.getReader();
@@ -196,3 +229,50 @@ form.addEventListener("submit", async (e) => {
 });
 
 updatePresets();
+
+// Trigger automated initial handshake
+async function triggerHiddenGreeting() {
+    const activeLayer = document.getElementById("chat-scene-1");
+    const agentDiv = document.createElement("div");
+    agentDiv.className = "message-bubble agent thinking";
+    agentDiv.innerHTML = '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+    if (activeLayer) activeLayer.appendChild(agentDiv);
+
+    try {
+        const res = await fetch("/scene1/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ session_id: "demo-stage-1-" + currentSessionSuffix, message: "Briefly greet the user to start the Morning task brief!" })
+        });
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let accumulatedText = "";
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split("\n");
+            for (let line of lines) {
+                if (line.startsWith("data: ")) {
+                    const jsonStr = line.slice(6).trim();
+                    if (jsonStr === "[DONE]") continue;
+                    try {
+                        const parsed = JSON.parse(jsonStr);
+                        if (parsed.text) {
+                            accumulatedText += parsed.text;
+                            agentDiv.innerHTML = marked.parse(accumulatedText) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+                        }
+                    } catch (err) { }
+                }
+            }
+        }
+        agentDiv.innerHTML = marked.parse(accumulatedText);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    } catch (err) {
+        agentDiv.innerHTML = marked.parse("Good morning! Welcome to UNO3 construction management system. Ready for shift briefs?");
+    }
+}
+
+window.addEventListener("DOMContentLoaded", triggerHiddenGreeting);

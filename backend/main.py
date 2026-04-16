@@ -13,9 +13,9 @@ from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
 
 # Import our three custom scene agents
-from scene_1_agent.agent import root_agent as agent_scene_1
-from scene_2_agent.agent import root_agent as agent_scene_2
-from scene_3_agent.agent import root_agent as agent_scene_3
+from .scene_1_agent.agent import root_agent as agent_scene_1
+from .scene_2_agent.agent import root_agent as agent_scene_2
+from .scene_3_agent.agent import root_agent as agent_scene_3
 
 app = FastAPI(title="Craft PTP Interactive Demo App")
 
@@ -92,6 +92,25 @@ async def chat_scene_3(request: Request):
     session_id = data.get("session_id", "default-s3")
     message = data.get("message", "")
     return StreamingResponse(event_generator(runner_scene_3, session_id, message), media_type="text/event-stream")
+
+@app.post("/reset")
+async def reset_sessions(request: Request):
+    data = await request.json()
+    session_id = data.get("session_id", "default-s1")
+    try:
+        # InMemorySessionService maintains ._sessions map
+        if hasattr(session_service, "delete_session"):
+            session_service.delete_session(session_id)
+        elif hasattr(session_service, "_sessions"):
+            if session_id in session_service._sessions:
+                del session_service._sessions[session_id]
+        return {"status": "reset_complete"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+from fastapi.staticfiles import StaticFiles
+frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
+app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

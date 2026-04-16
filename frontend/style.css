@@ -345,18 +345,22 @@ body {
     gap: 12px;
 }
 
-.message-form input {
+.message-form input,
+.message-form textarea {
     flex: 1;
     padding: 16px 24px;
-    border-radius: 30px;
+    border-radius: 24px;
     border: 1px solid var(--border-color);
     background-color: var(--bg-color);
     font-size: 15px;
     outline: none;
     transition: border-color 0.2s;
+    font-family: inherit;
+    resize: none;
 }
 
-.message-form input:focus {
+.message-form input:focus,
+.message-form textarea:focus {
     border-color: var(--primary-blue);
     background-color: white;
     box-shadow: 0 0 0 4px hsl(217, 91%, 95%);

@@ -6,23 +6,31 @@ An interactive, multi-scene visual showcase mimicking continuous Pre-Task Planni
 
 - **`backend/`**: Python microservice mapping independent Google ADK inference workflows across 3 stages:
   - **`scene_1_agent/`**: Coordinates Morning Task summaries.
+    ```mermaid
+    flowchart TD
+        R["root_agent (scene_1_planning_agent)"]
+        S["schedule_conflict_finder"]
+        H["hazard_mitigator (Energy Wheel RAG)"]
+        P["ptp_generator"]
+        A["plan_augmentor"]
+
+        R -->|"1. Check location overlaps"| S
+        R -->|"2. Assess task hazard state"| H
+        R -->|"3. Generate core plan"| P
+        R -->|"4. Request team substitutions"| A
+    ```
   - **`scene_2_agent/`**: Audits local stop-work procedures.
   - **`scene_3_agent/`**: Aggregates Continuous Improvements (Plus/Delta).
 - **`index.html`**: Embedded interactive viewer styling responsive checklists, real-time mock connection events, and Presenter action templates.
 
 ## Running Locally
 
-### 1. Deploy Backend Stream Endpoints
-As per global rules, please invoke `uv` inside the core terminal:
+### 1. Launch Integrated Application Server
+Run our integrated service on your core terminal via `uv`. This embeds the full web GUI stack directly out of the `/frontend` module mapped securely inline:
 ```bash
-cd backend
-uv pip install -r requirements.txt
-uv run uvicorn main:app --reload --port 8000
+uv pip install -r backend/requirements.txt
+uv run uvicorn backend.main:app --reload --port 8000
 ```
 
-### 2. Access Core Visualization (Frontend Web Server)
-Open a separate terminal from the backend, navigate to the root directory, and launch a local static file server:
-```bash
-python3 -m http.server 5500
-```
-Once running, navigate your web browser to [http://localhost:5500](http://localhost:5500) to interact with the visual presentation fully!
+### 2. Access Simulation Center
+Simply click and interact online at: [http://localhost:8000](http://localhost:8000) with full multi-scene capabilities loaded out-of-the-box automatically! No other separate manual client nodes required to run!
