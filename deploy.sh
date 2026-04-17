@@ -14,6 +14,6 @@ gcloud run deploy "$SERVICE_NAME" \
   --project "$PROJECT_ID" \
   --port 8000 \
   --allow-unauthenticated \
-  --set-env-vars "GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_LOCATION=$REGION"
+  --set-env-vars "GOOGLE_GENAI_USE_VERTEXAI=1,GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_LOCATION=$REGION,VAIS_LOCATION=global,VAIS_DATASTORE_ID=ptp-docs-store"
 
 echo ">>> Deployment Trigger Completed!"

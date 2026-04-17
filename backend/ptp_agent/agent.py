@@ -3,6 +3,7 @@ from google.adk.tools import AgentTool
 
 from .hazard_mitigator.agent import hazard_mitigator
 from .ptp_generator import ptp_generator
+from .schedule_conflict_finder.agent import schedule_conflict_finder
 
 transfer_action = """
     ## Final Action
@@ -10,16 +11,6 @@ transfer_action = """
     to the 'ptp_agent' to conclude the session. 
     Call the `transfer_to_agent` tool with agent_name="ptp_agent".
     """
-    
-schedule_conflict_finder = Agent(
-    name="schedule_conflict_finder",
-    model="gemini-2.5-flash",
-    description="Checks the Primavera P6 schedule for conflicts in a given location.",
-    instruction=f"""Check the Primavera schedule for conflicts in a given location. If found overlap, reply exactly with: Found overlap: Overhead mechanical pipeline installation scheduled in Area B, Aisle 3.
-    
-    {transfer_action}
-    """
-)
 
 learning_resources_provider = Agent(
     name="learning_resources_provider",
@@ -66,13 +57,15 @@ plan_augmentor = Agent(
 
 instruction = """You are the Craft PTP (Pre-Task Planning) Agent at the UNO3 Google Data Center construction site. Your job is to produce a Pre-Task Plan for the 3-5 person crew assigned to a specific task (such as data cable pulling) with safety and efficiency in mind.
 
-IF AND ONLY IF you are greeted by user do this: Greet the Data Center construction crew, and inform them that you are there to help with the Pre-Task Planning process. Then ask what the crew's task is today. 
-DO NOT greet user again if the control is transfered back to you from a sub agent.
+<greeting_rules>
+1. ONLY greet the user if this is the very first turn of the conversation. Inform user who you are and what you can do to help the user.
+2. If control is transferred back to you from a sub-agent (like `schedule_conflict_finder` or `hazard_mitigator`), DO NOT greet the user again. Just pick up where you left off and proceed to the next step.
+</greeting_rules>
 
 When the user gives you their location and task (e.g., pulling low voltage cable), do the following step by step:
 1. Consult schedule_conflict_finder agent to check for conflicts. 
-2. If there are scheduling conflicts, inform user that you are going to research in the risk and migitation. And then use hazard_mitigator agent to analyze potential hazards associated with the conflicting task.
-3. Inform user that you are ready to provide the Pre Task Plan (PTP v1). And ask for confirmation.
+2. If there are scheduling conflicts, inform user that you are going to research in the risk and migitation. And then use hazard_mitigator agent to analyze potential hazards associated with the task that conflicts with the main task.
+3. Inform user that you are ready to generate the Pre Task Plan (PTP v1). And ask for confirmation.
 4. If user confirms, use ptp_generator to generate the Pre Task Plan (PTP v1).
 5. After the plan is presented to the user, use plan_augmentor agent to augment the plan with additional considerations.
 6. Update the plan using ptp_generator to generate the final Pre Task Plan (PTP v2).
