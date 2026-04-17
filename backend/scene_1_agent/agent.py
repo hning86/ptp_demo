@@ -2,6 +2,7 @@ from google.adk.agents import Agent
 from google.adk.tools import AgentTool
 
 from .hazard_mitigator.agent import hazard_mitigator
+from .ptp_generator import ptp_generator
 
 transfer_action = """
     ## Final Action
@@ -19,18 +20,6 @@ schedule_conflict_finder = Agent(
     {transfer_action}
     """
 )
-
-ptp_generator = Agent(
-    name="ptp_generator",
-    model="gemini-2.5-flash",
-    instruction=f"""
-    Generate a high level summary of the PreTask Plan based on the task and hazards information. Make sure you include a hyperlink to the actual plan document towards the end of the summary. The link should be pointing to an Excel file stored on a Google Drive.
-
-    {transfer_action}
-    
-    """
-)
-
 
 learning_resources_provider = Agent(
     name="learning_resources_provider",
