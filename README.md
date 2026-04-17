@@ -8,7 +8,7 @@ An interactive, multi-scene visual showcase mimicking continuous Pre-Task Planni
   - **`scene_1_agent/`**: Coordinates Morning Task summaries.
     ```mermaid
     flowchart TD
-        R["root_agent (scene_1_planning_agent)"]
+        R["root_agent (ptp_agent)"]
         S["schedule_conflict_finder"]
         H["hazard_mitigator (Energy Wheel RAG)"]
         P["ptp_generator"]

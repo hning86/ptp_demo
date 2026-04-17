@@ -13,9 +13,8 @@ from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
 
 # Import our three custom scene agents
-from .scene_1_agent.agent import root_agent as agent_scene_1
-from .scene_2_agent.agent import root_agent as agent_scene_2
-from .scene_3_agent.agent import root_agent as agent_scene_3
+from .ptp_agent.agent import root_agent as agent_scene_1
+
 
 app = FastAPI(title="Craft PTP Interactive Demo App")
 
@@ -38,19 +37,7 @@ runner_scene_1 = Runner(
     auto_create_session=True
 )
 
-runner_scene_2 = Runner(
-    app_name="scene2_app",
-    agent=agent_scene_2,
-    session_service=session_service,
-    auto_create_session=True
-)
 
-runner_scene_3 = Runner(
-    app_name="scene3_app",
-    agent=agent_scene_3,
-    session_service=session_service,
-    auto_create_session=True
-)
 
 def event_generator(runner, session_id: str, message: str):
     async def _gen():
@@ -79,19 +66,7 @@ async def chat_scene_1(request: Request):
     message = data.get("message", "")
     return StreamingResponse(event_generator(runner_scene_1, session_id, message), media_type="text/event-stream")
 
-@app.post("/scene2/chat")
-async def chat_scene_2(request: Request):
-    data = await request.json()
-    session_id = data.get("session_id", "default-s2")
-    message = data.get("message", "")
-    return StreamingResponse(event_generator(runner_scene_2, session_id, message), media_type="text/event-stream")
 
-@app.post("/scene3/chat")
-async def chat_scene_3(request: Request):
-    data = await request.json()
-    session_id = data.get("session_id", "default-s3")
-    message = data.get("message", "")
-    return StreamingResponse(event_generator(runner_scene_3, session_id, message), media_type="text/event-stream")
 
 @app.post("/reset")
 async def reset_sessions(request: Request):

@@ -7,8 +7,8 @@ from .ptp_generator import ptp_generator
 transfer_action = """
     ## Final Action
     Once you have provided the final analysis, you MUST hand control back 
-    to the 'scene_1_planning_agent' to conclude the session. 
-    Call the `transfer_to_agent` tool with agent_name="scene_1_planning_agent".
+    to the 'ptp_agent' to conclude the session. 
+    Call the `transfer_to_agent` tool with agent_name="ptp_agent".
     """
     
 schedule_conflict_finder = Agent(
@@ -82,7 +82,7 @@ You must execute these steps sequentially. If you invoke a sub agent and it retu
 """
 
 root_agent = Agent(
-    name="scene_1_planning_agent",
+    name="ptp_agent",
     model="gemini-2.5-flash",
     instruction=instruction,
     sub_agents=[schedule_conflict_finder, hazard_mitigator, ptp_generator, plan_augmentor]

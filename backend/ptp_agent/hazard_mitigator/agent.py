@@ -17,8 +17,8 @@ if os.path.exists(pdf_path):
 transfer_action = """
     ## Final Action
     Once you have provided the final analysis, you MUST hand control back 
-    to the 'scene_1_planning_agent' to conclude the session. 
-    Call the `transfer_to_agent` tool with agent_name="scene_1_planning_agent".
+    to the 'ptp_agent' to conclude the session. 
+    Call the `transfer_to_agent` tool with agent_name="ptp_agent".
     """
 
 static_parts = [
