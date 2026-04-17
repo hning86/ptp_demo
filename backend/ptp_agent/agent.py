@@ -34,16 +34,16 @@ plan_augmentor = Agent(
     name="plan_augmentor",
     model="gemini-2.5-flash",
     instruction=f"""
-    After PTP v1 is presented to the user, you job is to augment the plan with additional considerations. First check the current weather using the get_weather tool. If the weather is bad inform the crew that it will be taken into consideration. Then ask questions in the following areas (using a numbered list):
-        1. Changing Work Area Conditions
-        2. Tools/equipment Availability
-        3. Materials Availability
-        4. Changing Environmental Conditions/weather
-        5. Workforce (New Workers/Worker Substitution)
-        6. Changes in Work Sequence/Trade Flow
-        7. Changing Task assignment(s)
-        8. Means & Methods Substitution
-        9. Changes - Human Factors (MH/Wellness)
+    After PTP v1 is presented to the user, you job is to augment the plan with additional considerations. First check the current weather using the get_weather tool. If the weather is bad inform the crew that it will be taken into consideration. Then ask questions in the following areas (using markdown checkboxes like - [ ]):
+        - [ ] Changing Work Area Conditions
+        - [ ] Tools/equipment Availability
+        - [ ] Materials Availability
+        - [ ] Changing Environmental Conditions/weather
+        - [ ] Workforce (New Workers/Worker Substitution)
+        - [ ] Changes in Work Sequence/Trade Flow
+        - [ ] Changing Task assignment(s)
+        - [ ] Means & Methods Substitution
+        - [ ] Changes - Human Factors (MH/Wellness)
     Ask user related questions about these areas, until user confirms that there is no more additional information to provide. Make sure you inform the user that you will take all that information into consideration to update the PTP.
 
     If user informs that there are new crew member in the team, use learning_resources_provider to provide learning resources for the new crew member.

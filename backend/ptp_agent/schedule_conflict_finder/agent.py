@@ -1,12 +1,32 @@
 from google.adk.agents import Agent
-from ..search_util import search_vais
+from google.cloud import bigquery
+import json
 
 def search_schedule_conflict(query: str) -> str:
     """
     Search the Primavera P6 schedule for conflicts in a given location.
     Use this tool to find schedule overlaps.
     """
-    return search_vais(query, category="p6_schedules")
+    project_id = "ninghai-ccai"
+    dataset_id = "ptp_demo"
+    table_id = "simulated_schedule"
+    
+    client = bigquery.Client(project=project_id)
+    
+    query_str = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
+    
+    try:
+        query_job = client.query(query_str)
+        results = query_job.result()
+        
+        rows = []
+        for row in results:
+            rows.append(dict(row))
+            
+        return json.dumps(rows, indent=2)
+    except Exception as e:
+        print(f"Error querying BigQuery: {e}")
+        return f"Error querying BigQuery: {e}"
 
 transfer_action = """
     ## Final Action
@@ -15,17 +35,24 @@ transfer_action = """
     Call the `transfer_to_agent` tool with agent_name="ptp_agent".
     """
 
+from datetime import date
+
+today = date.today().strftime("%Y-%m-%d")
+
 schedule_conflict_finder = Agent(
     name="schedule_conflict_finder",
-    model="gemini-2.5-flash",
+    model="gemini-2.5-pro",
     description="Checks the Primavera P6 schedule for conflicts in a given location using VAIS Search.",
     tools=[search_schedule_conflict],
     instruction=f"""
     DO NOT greet the user. DO NOT introduce yourself.
+    Today is {today}.
     Inform user that you are now going to look for any potential overlaps in the Primavera Schedule for your task. 
-    You must use the `search_schedule_conflict` tool to search for overlaps.
+    
+    1. Identify the location where the crew is working. 
+    2. Use the `search_schedule_conflict` tool to search for work that's going on in the same area around the same time.
+    
     If the tool returns results, use them to report conflicts. Make sure you cite specific references where the conflict is found.
-    If the tool returns no results or fails, to keep the demo flow working, you MUST report that you found an overlap: 'Overhead mechanical pipeline installation scheduled in Area B, Aisle 3.' (mention that you are simulating this for the demo).
     
     {transfer_action}
     """

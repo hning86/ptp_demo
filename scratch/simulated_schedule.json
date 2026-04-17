@@ -1,0 +1,82 @@
+[
+  {
+    "task_id": "CN-F-Z02.MYD.S36.CP.042",
+    "description": "Prep,Set MYD Security Camera Pole CP-MYD-03",
+    "start_date": "2025-11-14",
+    "end_date": "2025-11-18",
+    "location": "Area B",
+    "crew_foreperson": "John Doe"
+  },
+  {
+    "task_id": "CN-F-Z01.MYD.S36..009",
+    "description": "Pull/Term/Test Access Control Homeruns for NUN 1.18",
+    "start_date": "2026-01-05",
+    "end_date": "2026-01-26",
+    "location": "Aisle 3",
+    "crew_foreperson": "Jane Smith"
+  },
+  {
+    "task_id": "MECH-001",
+    "description": "Install overhead mechanical pipeline",
+    "start_date": "2026-04-15",
+    "end_date": "2026-05-05",
+    "location": "Area B, Aisle 3",
+    "crew_foreperson": "Bob Johnson"
+  },
+  {
+    "task_id": "ELEC-002",
+    "description": "Pull low voltage cable in aisle 3",
+    "start_date": "2026-01-05",
+    "end_date": "2026-01-05",
+    "location": "Area B, Aisle 3",
+    "crew_foreperson": "Alice Brown"
+  },
+  {
+    "task_id": "HVAC-003",
+    "description": "Install CRAC units and connect ducting",
+    "start_date": "2026-01-10",
+    "end_date": "2026-01-15",
+    "location": "Area A, Aisle 1",
+    "crew_foreperson": "Charlie Green"
+  },
+  {
+    "task_id": "DW-004",
+    "description": "Hang drywall and tape in corridors",
+    "start_date": "2026-01-12",
+    "end_date": "2026-01-18",
+    "location": "Area C, Corridor",
+    "crew_foreperson": "David White"
+  },
+  {
+    "task_id": "FLR-005",
+    "description": "Install raised access flooring pedestals",
+    "start_date": "2026-01-08",
+    "end_date": "2026-01-14",
+    "location": "Area A, Aisle 2",
+    "crew_foreperson": "Eva Black"
+  },
+  {
+    "task_id": "ROOF-006",
+    "description": "Inspect roof flashing and seal penetrations",
+    "start_date": "2026-01-05",
+    "end_date": "2026-01-07",
+    "location": "Roof",
+    "crew_foreperson": "Frank Miller"
+  },
+  {
+    "task_id": "ELEC-007",
+    "description": "Mount and wire PDU panels",
+    "start_date": "2026-01-15",
+    "end_date": "2026-01-22",
+    "location": "Electrical Room 1",
+    "crew_foreperson": "Grace Davis"
+  },
+  {
+    "task_id": "COMM-008",
+    "description": "Pre-commissioning checks for Generator 1",
+    "start_date": "2026-01-20",
+    "end_date": "2026-01-25",
+    "location": "Generator Yard",
+    "crew_foreperson": "Hank Wilson"
+  }
+]

@@ -12,14 +12,38 @@ transfer_action = """
     Call the `transfer_to_agent` tool with agent_name="ptp_agent".
     """
 
-from ..search_util import search_vais
+import vertexai
+from vertexai.preview import rag
 
 def search_safety_guideline(query: str) -> str:
     """
     Search the Safety Requirements document for safety guidelines and hazard mitigations.
     Use this tool to find specific hazards and controls from the Safety Requirements document.
     """
-    return search_vais(query, category="safety-requirements")
+    vertexai.init(project="ninghai-ccai", location="us-east5")
+    
+    try:
+        response = rag.retrieval_query(
+            text=query,
+            rag_resources=[rag.RagResource(rag_corpus="projects/ninghai-ccai/locations/us-east5/ragCorpora/4611686018427387904")],
+            similarity_top_k=5
+        )
+        
+        contexts = []
+        if hasattr(response, 'contexts') and hasattr(response.contexts, 'contexts'):
+            for context in response.contexts.contexts:
+                contexts.append(context.text)
+        elif hasattr(response, 'contexts'):
+            for context in response.contexts:
+                contexts.append(context.text)
+        
+        if not contexts:
+            return "No relevant safety contexts found."
+            
+        return "\n".join(contexts)
+    except Exception as e:
+        print(f"Rag Engine error: {e}")
+        return f"Error retrieving from Rag Engine: {e}"
 
 hazard_mitigator = Agent(
     name="hazard_mitigator",

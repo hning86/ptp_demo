@@ -127,6 +127,50 @@ function renderChecklist(options, onSelect) {
     });
 }
 
+function renderCheckboxes(questions) {
+    interactiveForms.innerHTML = "";
+    const form = document.createElement("div");
+    form.className = "checkbox-form";
+
+    questions.forEach((q, index) => {
+        const div = document.createElement("div");
+        div.className = "checkbox-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `q-${index}`;
+        checkbox.value = q;
+
+        const label = document.createElement("label");
+        label.htmlFor = `q-${index}`;
+        label.textContent = q;
+
+        div.appendChild(checkbox);
+        div.appendChild(label);
+        form.appendChild(div);
+    });
+
+    const submitBtn = document.createElement("button");
+    submitBtn.textContent = "Submit Selected";
+    submitBtn.className = "submit-btn";
+
+    submitBtn.onclick = () => {
+        const selected = [];
+        form.querySelectorAll("input[type='checkbox']:checked").forEach(cb => {
+            selected.push(cb.value);
+        });
+        if (selected.length > 0) {
+            const userInput = document.getElementById("user-input");
+            userInput.value = "Ask me about: " + selected.join(", ") + ". And I am good with everything else.";
+            document.getElementById("message-form").requestSubmit();
+            interactiveForms.innerHTML = ""; // Clear after submit
+        }
+    };
+    form.appendChild(submitBtn);
+
+    interactiveForms.appendChild(form);
+}
+
 // Process response side effects
 function handleScriptTriggers(agentText) {
     // Check for specific conditions from the script to trigger immersive UI
@@ -136,6 +180,21 @@ function handleScriptTriggers(agentText) {
         });
     } else if (agentText.includes("Take Two:") || agentText.includes("reassess your plan")) {
         renderChecklist(["Work Area Changes", "Tool Availability", "Material Availability", "Weather", "New Crew Members"], (opt, sel) => {});
+    }
+
+    // Parse markdown checkboxes (allowing leading whitespace)
+    const lines = agentText.split("\n");
+    const questions = [];
+    lines.forEach(line => {
+        const match = line.match(/^\s*-\s*\[\s*\]\s*(.*)/);
+        if (match) {
+            questions.push(match[1].trim());
+        }
+    });
+
+    if (questions.length > 0) {
+        renderCheckboxes(questions);
+        addLog(`Rendered ${questions.length} interactive checkboxes.`);
     }
 }
 
@@ -197,14 +256,25 @@ form.addEventListener("submit", async (e) => {
                         const parsed = JSON.parse(jsonStr);
                         if (parsed.text) {
                             accumulatedText += parsed.text;
-                            agentDiv.innerHTML = marked.parse(accumulatedText) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+
+                            // Filter out duplicate checklist items for display
+                            const filteredText = accumulatedText.split("\n")
+                                .filter(l => !l.match(/^\s*-\s*\[\s*\]/))
+                                .join("\n");
+
+                            agentDiv.innerHTML = marked.parse(filteredText) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
                             chatWindow.scrollTop = chatWindow.scrollHeight;
                         }
                     } catch (err) {}
                 }
             }
         }
-        agentDiv.innerHTML = marked.parse(accumulatedText);
+
+        const filteredText = accumulatedText.split("\n")
+            .filter(l => !l.match(/^\s*-\s*\[\s*\]/))
+            .join("\n");
+
+        agentDiv.innerHTML = marked.parse(filteredText);
         handleScriptTriggers(accumulatedText);
         addLog("Received full streaming context.");
         
