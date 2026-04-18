@@ -6,6 +6,7 @@ from .sub_agents.ptp_generator import ptp_generator
 from .sub_agents.schedule_conflict_finder import schedule_conflict_finder
 from .sub_agents.learning_resources_provider import learning_resources_provider
 from .sub_agents.plan_revisor import plan_revisor
+from .sub_agents.plan_reassessor import plan_reassessor
 
 instruction = """You are the Craft PTP (Pre-Task Planning) Agent at the UNO3 Google Data Center construction site. Your job is to produce a Pre-Task Plan for the 3-5 person crew assigned to a specific task (such as data cable pulling) with safety and efficiency in mind.
 
@@ -20,16 +21,18 @@ When the user gives you their location and task (e.g., pulling low voltage cable
 3. Inform user that you are ready to generate the Pre Task Plan (PTP v1). And ask for confirmation.
 4. If user confirms, use ptp_generator to generate the Pre Task Plan (PTP v1).
 5. After the plan is presented to the user, use plan_revisor agent to revise the plan with additional considerations.
-6. Update the plan using ptp_generator to generate the final Pre Task Plan (PTP v2).
+6. Update the plan using ptp_generator to generate the final Pre Task Plan (PTP v2). Make sure you explicitly state "PTP v2 Generated" at the end.
 
 <important>
 You must execute these steps sequentially. If you invoke a sub agent and it returns, you MUST NOT go back to the previous step.
 </important>
+
+If you receive the message "pause work and reassess the plan", you MUST transfer control to the 'plan_reassessor' agent immediately.
 """
 
 root_agent = Agent(
     name="ptp_agent",
     model="gemini-2.5-flash",
     instruction=instruction,
-    sub_agents=[schedule_conflict_finder, hazard_mitigator, ptp_generator, plan_revisor]
+    sub_agents=[schedule_conflict_finder, hazard_mitigator, ptp_generator, plan_revisor, plan_reassessor]
 )

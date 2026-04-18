@@ -179,6 +179,14 @@ body {
     color: var(--text-muted);
 }
 
+.scene-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--border-color);
+    background-color: transparent;
+    transform: none;
+}
+
 .scene-btn:hover {
     border-color: var(--primary-blue);
     background-color: hsl(217, 91%, 98%);

@@ -99,6 +99,13 @@ document.querySelectorAll(".scene-btn").forEach(btn => {
             }
             
             addLog("Initiated midday periodic Stop Work authority check.");
+
+            // Automatically send message to agent
+            const userInput = document.getElementById("user-input");
+            if (userInput) {
+                userInput.value = "pause work and reassess the plan";
+                document.getElementById("message-form").requestSubmit();
+            }
         } else {
             currentScene = selectedScene;
             updatePresets();
@@ -301,6 +308,15 @@ form.addEventListener("submit", async (e) => {
 
         agentDiv.innerHTML = marked.parse(filteredText);
         handleScriptTriggers(accumulatedText);
+        
+        if (accumulatedText.includes("PTP v2 Generated")) {
+            const swatBtn = document.getElementById("scene-2-btn");
+            if (swatBtn) {
+                swatBtn.disabled = false;
+                addLog("SWAT-2 button enabled.");
+            }
+        }
+        
         addLog("Received full streaming context.");
         
     } catch (error) {
