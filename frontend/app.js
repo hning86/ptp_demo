@@ -3,8 +3,8 @@ const presetPrompts = {
         { id: "btn_cable_pull", label: "Pull Cable", text: "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done." },
         { id: "btn_yes", label: "Yes", text: "Yes" },
         { id: "btn_no", label: "No", text: "No" },
-        { id: "btn_new_members", label: "New Members", text: "We have 2 new crew members, ready for next step." },
-        { id: "btn_ready", label: "Ready", text: "We are ready to review the pre-task plan." }
+        { id: "btn_new_members", label: "New Member", text: "We have a new member in the crew. This is his first day at the job site." },
+        { id: "btn_ready", label: "Ready", text: "We are ready to move on to the next step." }
     ],
     2: [
         { id: "btn_cable_pull", label: "Take Two", text: "Take Two" },
@@ -196,6 +196,13 @@ function renderCheckboxes(questions) {
     interactiveForms.appendChild(form);
 }
 
+function embedYouTube(html) {
+    const youtubeRegex = /<a href="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)".*?>.*?<\/a>/g;
+    return html.replace(youtubeRegex, (match, videoId) => {
+        return `<div class="video-container"><iframe src="https://www.youtube.com/embed/${videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+    });
+}
+
 // Process response side effects
 function handleScriptTriggers(agentText) {
 
@@ -294,7 +301,8 @@ form.addEventListener("submit", async (e) => {
                                 .filter(l => !l.match(/^\s*-\s*\[\s*\]/))
                                 .join("\n");
 
-                            agentDiv.innerHTML = marked.parse(filteredText) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+                            const parsedHtml = marked.parse(filteredText);
+                            agentDiv.innerHTML = embedYouTube(parsedHtml) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
                             chatWindow.scrollTop = chatWindow.scrollHeight;
                         }
                     } catch (err) {}
@@ -306,7 +314,8 @@ form.addEventListener("submit", async (e) => {
             .filter(l => !l.match(/^\s*-\s*\[\s*\]/))
             .join("\n");
 
-        agentDiv.innerHTML = marked.parse(filteredText);
+        const parsedHtml = marked.parse(filteredText);
+        agentDiv.innerHTML = embedYouTube(parsedHtml);
         handleScriptTriggers(accumulatedText);
         
         if (accumulatedText.includes("PTP v2 Generated")) {

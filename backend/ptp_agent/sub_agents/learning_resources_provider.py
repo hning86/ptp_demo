@@ -22,19 +22,25 @@ def get_past_incidents(task: str) -> str:
     Suggested Resource: OSHA Worksite Ergonomics Guide (https://www.oshaeducationcenter.com/worksite-ergonomics-guide/)
     """
 
+def get_scissor_lift_video_link() -> str:
+    """
+    Retrieve the scissor lift safety video link.
+    """
+    return "https://www.youtube.com/watch?v=coYQOu2Y1pI"
+
 learning_resources_provider = Agent(
     name="learning_resources_provider",
     model="gemini-2.5-flash",
     instruction=f"""
     {common_instruction}
-    Provide learning resources for the safety topic, which are related to the task. First, use the get_past_incidents tool to retrieve past incidents for the task. Then display the following as a list of resources: 
+    Provide learning resources for the safety topic, which are related to the task. First, use the get_past_incidents tool to retrieve past incidents for the task. Also use get_scissor_lift_video_link to get the video link. Then display the following as a list of resources: 
     - Toolbox doc (A Gemini-generated 1-page summary on cable pulling fall hazards based on TSS)
-    - Training video (A 5-minute manufacturer video on hybrid scissor lift)
-    - Past incidents:
-        - For the Near Miss incident (scissor lift crushing ladder), reference it as a Near Miss event, focus on barricade and spotter/banksperson requirements, and suggest a link to an OSHA toolbox talk about working around tight spaces with scissor lifts.
-        - For the Ergonomic incident (shoulder pain), provide the link to the OSHA Worksite Ergonomics Guide (https://www.oshaeducationcenter.com/worksite-ergonomics-guide/) to improve pre-planning of overhead work.
+    - Training video (Provide the link retrieved by get_scissor_lift_video_link)
+    - List past incidents (from the get_past_incidents tool in simple one-line-bullet-points format)
+
+    Stops and ask user to take some time to review the above materials. Once the user is ready, continue with the next step by using transfer action.
         
     {transfer_action}
     """,
-    tools=[get_past_incidents]
+    tools=[get_past_incidents, get_scissor_lift_video_link]
 )
