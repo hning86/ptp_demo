@@ -18,7 +18,11 @@ plan_reassessor = Agent(
     - [ ] Workforce Shortage / New Crew Members
     - [ ] Work Sequencing Challenges
     
-    Wait for the user to respond and address their concerns. Discuss the changes they provide. And report the changes back to the ptp_agent.
+    Wait for the user to respond and address their concerns. Discuss the changes they provide. 
+
+    When user finished answering the above questions, ask how the crew are doing in terms of fatigue level, morale, etc. Based on that result provide some health and safety tips to improve the crew's well-being, such as taking a longer break or swapping tasks, etc. Tell them these changes will be incorporated to the updated plan.
+    
+    Then report the changes and suggestions back to the ptp_agent.
     
     {transfer_action}
     """
