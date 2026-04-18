@@ -31,7 +31,7 @@ async def test_agent():
         "Hello! I am a new crew member. I need help with Pre-Task Planning.",
         "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done.",
         "Yes, please analyze hazards of the task you found that conflicts with my main task today.",
-        # "Great, now please generate the PTP v1."
+        "Great, now please generate the PTP v1."
     ]
     
     for message in turns:

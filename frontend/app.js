@@ -115,6 +115,15 @@ document.querySelectorAll(".scene-btn").forEach(btn => {
 // Dynamic Interactive Form Rendering
 function renderChecklist(options, onSelect) {
     interactiveForms.innerHTML = "";
+    interactiveForms.classList.remove("collapsed");
+    
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "close-flyout-btn";
+    closeBtn.onclick = () => {
+        interactiveForms.classList.toggle("collapsed");
+    };
+    interactiveForms.appendChild(closeBtn);
+
     options.forEach(opt => {
         const pill = document.createElement("button");
         pill.className = "checklist-pill";
@@ -129,6 +138,15 @@ function renderChecklist(options, onSelect) {
 
 function renderCheckboxes(questions) {
     interactiveForms.innerHTML = "";
+    interactiveForms.classList.remove("collapsed");
+    
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "close-flyout-btn";
+    closeBtn.onclick = () => {
+        interactiveForms.classList.toggle("collapsed");
+    };
+    interactiveForms.appendChild(closeBtn);
+
     const form = document.createElement("div");
     form.className = "checkbox-form";
 
@@ -173,24 +191,31 @@ function renderCheckboxes(questions) {
 
 // Process response side effects
 function handleScriptTriggers(agentText) {
-    // Check for specific conditions from the script to trigger immersive UI
-    if (agentText.includes("finalize the task-specific elements") || agentText.includes("choose all that apply")) {
-        renderChecklist(["Weather conditions", "New crew members", "Work area accessibility", "Egress", "Lighting"], (opt, sel) => {
-            addLog(`Toggled ${opt}: ${sel}`);
-        });
-    } else if (agentText.includes("Take Two:") || agentText.includes("reassess your plan")) {
-        renderChecklist(["Work Area Changes", "Tool Availability", "Material Availability", "Weather", "New Crew Members"], (opt, sel) => {});
-    }
+
 
     // Parse markdown checkboxes (allowing leading whitespace)
     const lines = agentText.split("\n");
     const questions = [];
+    let consecutiveCount = 0;
+    let currentSequence = [];
+
     lines.forEach(line => {
         const match = line.match(/^\s*-\s*\[\s*\]\s*(.*)/);
         if (match) {
-            questions.push(match[1].trim());
+            consecutiveCount++;
+            currentSequence.push(match[1].trim());
+        } else {
+            if (consecutiveCount >= 2) {
+                questions.push(...currentSequence);
+            }
+            consecutiveCount = 0;
+            currentSequence = [];
         }
     });
+    
+    if (consecutiveCount >= 2) {
+        questions.push(...currentSequence);
+    }
 
     if (questions.length > 0) {
         renderCheckboxes(questions);

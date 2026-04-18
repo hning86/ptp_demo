@@ -347,6 +347,54 @@ body {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    position: relative;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.interactive-forms.collapsed > *:not(.close-flyout-btn) {
+    display: none !important;
+}
+
+.interactive-forms.collapsed {
+    padding-top: 30px;
+    min-height: 30px;
+}
+
+.close-flyout-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 10px;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-flyout-btn::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-bottom: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: rotate(45deg);
+    margin-bottom: 4px;
+    transition: transform 0.3s ease;
+}
+
+.interactive-forms.collapsed .close-flyout-btn::after {
+    transform: rotate(-135deg);
+    margin-bottom: -4px;
+}
+
+.close-flyout-btn:hover {
+    color: var(--primary-blue);
 }
 
 .checklist-pill {

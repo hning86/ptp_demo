@@ -4,16 +4,10 @@ from google import genai
 from google.genai import types
 from google.adk.agents import Agent
 from google.cloud import discoveryengine
-
-transfer_action = """
-    ## Final Action
-    Once you have provided the final analysis, you MUST hand control back 
-    to the 'ptp_agent' to conclude the session. 
-    Call the `transfer_to_agent` tool with agent_name="ptp_agent".
-    """
-
 import vertexai
 from vertexai.preview import rag
+
+from .shared import transfer_action, common_instruction
 
 def search_safety_guideline(query: str) -> str:
     """
@@ -51,7 +45,7 @@ hazard_mitigator = Agent(
     description="Analyzes potential hazards associated with the user's task and lists safety precautions using VAIS Search.",
     tools=[search_safety_guideline],
     instruction=f"""
-    DO NOT greet the user. DO NOT introduce yourself.
+    {common_instruction}
     Given a data center construction task, just ask user if they want to analyze potential hazards of the task and provide the mitigation plan. If user answers yes, your job is to analyze the potential hazards associated with the task and list mitigation measures. 
     
     You must use the `search_safety_guideline` tool to find specific hazards and controls from the Safety Requirements document. You must strictly use the Safety Requirements content returned by the tool as the main reference. DO NOT use any other source. Please provide citation or reference to the specific content found when you mention a specific hazard and mitigation.

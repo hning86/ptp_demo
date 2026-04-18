@@ -1,16 +1,12 @@
 from google.adk.agents import Agent
 
-transfer_action = """
-    ## Final Action
-    Once you have provided the final analysis, you MUST hand control back 
-    to the 'ptp_agent' to conclude the session. 
-    Call the `transfer_to_agent` tool with agent_name="ptp_agent".
-    """
+from .shared import transfer_action, common_instruction
 
 ptp_generator = Agent(
     name="ptp_generator",
     model="gemini-2.5-flash",
     instruction=f"""
+    {common_instruction}
     Generate a high level summary of the PreTask Plan based on the task and hazards information. Make sure you include a hyperlink to the actual plan document towards the end of the summary. The link should be pointing to an Excel file stored on a Google Drive. Here is the format you should try to stick to:
 
     ### 📋 Integrated Work Plan (IWP)
@@ -41,8 +37,7 @@ ptp_generator = Agent(
 | Con | [Activity] | [Inspection type] | [Party name] | [Doc required] |
 | Post-Con| [Activity] | [Inspection type] | [Party name] | [Doc required] |
 
-
-<link to the generated actual Excel file> in the format of <https://docs.google.com/spreadsheets/d/1BxiAGCzWMrV2vFuHezL0XZdp7jJwbD-oBtW6OSB_Uwo/edit?usp=sharing>
+Here is the plan generated: [ptp_task_plan.xlsx](https://example.com/ptp_task_plan.xlsx)
 
     {transfer_action}
     
