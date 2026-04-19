@@ -50,6 +50,12 @@
                     <span>Plus/Delta Session</span>
                 </button>
             </nav>
+            <button class="sidebar-btn" id="show-schedule-btn">
+                📅 View P6 Schedule
+            </button>
+            <button class="sidebar-btn" id="show-docs-btn">
+                📚 Safety Documents
+            </button>
             <div class="system-log" id="activity-log">
                 <h3>System Actions</h3>
                 <ul id="log-list">
@@ -88,6 +94,26 @@
             </div>
         </section>
     </main>
+
+    <div id="schedule-pane" class="flyout-pane">
+        <div class="pane-header">
+            <h3>P6 Schedule Information</h3>
+            <button id="close-schedule-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="pane-content" id="schedule-content">
+            <!-- Schedule data will be inserted here -->
+        </div>
+    </div>
+
+    <div id="docs-pane" class="flyout-pane">
+        <div class="pane-header">
+            <h3>Safety Documents</h3>
+            <button id="close-docs-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="pane-content" id="docs-content">
+            <!-- Safety docs will be inserted here -->
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="app.js"></script>

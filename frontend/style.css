@@ -375,7 +375,7 @@ body {
     flex-wrap: wrap;
     position: relative;
     padding-top: 20px;
-    transition: all 0.3s ease;
+    transition: all 1.0s ease-in-out;
 }
 
 .interactive-forms.collapsed > *:not(.close-flyout-btn) {
@@ -596,4 +596,110 @@ body {
 }
 .message-bubble.user pre, .message-bubble.user code {
     background: rgba(255,255,255,0.2);
+}
+
+/* Sidebar Buttons (Schedule & Docs) */
+.sidebar-btn {
+    margin: 6px 12px;
+    width: calc(100% - 24px);
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-btn:hover {
+    background-color: hsl(217, 89%, 50%);
+}
+
+/* Fly-out Panes (Schedule & Docs) */
+.flyout-pane {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Hidden by default */
+    width: 400px;
+    height: 100%;
+    background-color: var(--panel-bg);
+    border-left: 1px solid var(--border-color);
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.flyout-pane.open {
+    right: 0;
+}
+
+.pane-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-main);
+}
+
+.pane-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-main);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px 8px;
+}
+
+.close-btn:hover {
+    color: var(--text-main);
+}
+
+.pane-content {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.schedule-card {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: transform 0.2s ease;
+}
+
+.schedule-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.schedule-card h4 {
+    margin: 0 0 8px 0;
+    color: var(--primary-blue);
+}
+
+.schedule-card p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.schedule-card .label {
+    font-weight: 600;
+    color: var(--text-main);
 }

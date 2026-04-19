@@ -18,6 +18,9 @@ const presetPrompts = {
     ]
 };
 
+
+
+
 let currentScene = 1;
 let sceneStepIndex = 0;
 let currentSessionSuffix = Date.now().toString();
@@ -403,3 +406,90 @@ async function triggerHiddenGreeting() {
 }
 
 window.addEventListener("DOMContentLoaded", triggerHiddenGreeting);
+
+// Schedule Pane Logic
+const showScheduleBtn = document.getElementById("show-schedule-btn");
+const closeScheduleBtn = document.getElementById("close-schedule-btn");
+const schedulePane = document.getElementById("schedule-pane");
+const scheduleContent = document.getElementById("schedule-content");
+
+if (showScheduleBtn && schedulePane && closeScheduleBtn) {
+    showScheduleBtn.addEventListener("click", () => {
+        renderSchedule();
+        schedulePane.classList.add("open");
+    });
+
+    closeScheduleBtn.addEventListener("click", () => {
+        schedulePane.classList.remove("open");
+    });
+}
+
+async function renderSchedule() {
+    if (!scheduleContent) return;
+    scheduleContent.innerHTML = "<p>Loading schedule...</p>";
+    try {
+        const response = await fetch("/schedule");
+        const data = await response.json();
+        if (data.error) {
+            scheduleContent.innerHTML = `<p>Error loading schedule: ${data.error}</p>`;
+            return;
+        }
+        scheduleContent.innerHTML = "";
+        data.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "schedule-card";
+            card.innerHTML = `
+                <h4>${item.description}</h4>
+                <p><span class="label">Task ID:</span> ${item.task_id}</p>
+                <p><span class="label">Dates:</span> ${item.start_date} to ${item.end_date}</p>
+                <p><span class="label">Location:</span> ${item.location}</p>
+                <p><span class="label">Foreperson:</span> ${item.crew_foreperson}</p>
+            `;
+            scheduleContent.appendChild(card);
+        });
+    } catch (err) {
+        scheduleContent.innerHTML = `<p>Error loading schedule: ${err.message}</p>`;
+    }
+}
+
+// Docs Pane Logic
+const showDocsBtn = document.getElementById("show-docs-btn");
+const closeDocsBtn = document.getElementById("close-docs-btn");
+const docsPane = document.getElementById("docs-pane");
+const docsContent = document.getElementById("docs-content");
+
+if (showDocsBtn && docsPane && closeDocsBtn) {
+    showDocsBtn.addEventListener("click", () => {
+        renderDocs();
+        docsPane.classList.add("open");
+    });
+
+    closeDocsBtn.addEventListener("click", () => {
+        docsPane.classList.remove("open");
+    });
+}
+
+async function renderDocs() {
+    if (!docsContent) return;
+    docsContent.innerHTML = "<p>Loading documents...</p>";
+    try {
+        const response = await fetch("/safety-docs");
+        const data = await response.json();
+        if (data.error) {
+            docsContent.innerHTML = `<p>Error loading documents: ${data.error}</p>`;
+            return;
+        }
+        docsContent.innerHTML = "";
+        data.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "schedule-card";
+            card.innerHTML = `
+                <h4><a href="${item.url}" target="_blank" style="color: var(--primary-blue); text-decoration: none;">${item.title}</a></h4>
+                <p><span class="label">Category:</span> ${item.category}</p>
+            `;
+            docsContent.appendChild(card);
+        });
+    } catch (err) {
+        docsContent.innerHTML = `<p>Error loading documents: ${err.message}</p>`;
+    }
+}
