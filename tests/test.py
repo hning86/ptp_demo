@@ -8,10 +8,10 @@ from google.genai import types
 
 from dotenv import load_dotenv
 # Load environment variables from backend/.env
-load_dotenv(os.path.join(os.path.dirname(__file__), "backend", ".env"))
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", "backend", ".env"))
 
 # Ensure the project root is in the python path
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import the agent
 from backend.ptp_agent.agent import root_agent

@@ -113,10 +113,6 @@ document.querySelectorAll(".scene-btn").forEach(btn => {
             currentScene = selectedScene;
             updatePresets();
             
-            document.querySelectorAll(".scene-layer").forEach(l => l.classList.remove("active"));
-            const tgt = document.getElementById("chat-scene-" + currentScene);
-            if (tgt) tgt.classList.add("active");
-            
             addLog(`Navigated to Scene ${currentScene}`);
         }
     });
@@ -257,7 +253,7 @@ form.addEventListener("submit", async (e) => {
     const msg = input.value.trim();
     if (!msg) return;
 
-    const activeLayer = document.getElementById("chat-scene-" + currentScene);
+    const activeLayer = document.getElementById("chat-scene-1");
     // Render user msg
     const userDiv = document.createElement("div");
     userDiv.className = "message-bubble user";
