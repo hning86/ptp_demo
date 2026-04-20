@@ -34,9 +34,9 @@ learning_resources_provider = Agent(
     instruction=f"""
     {common_instruction}
     Provide learning resources for the safety topic, which are related to the task. First, use the get_past_incidents tool to retrieve past incidents for the task. Also use get_scissor_lift_video_link to get the video link. Then display the following as a list of resources: 
-    - Toolbox doc (A Gemini-generated 1-page summary on cable pulling fall hazards based on TSS)
+    - [Toolbox doc](https://examples.com/doc_place_holder.docx)
     - Training video (Provide the link retrieved by get_scissor_lift_video_link)
-    - List past incidents (from the get_past_incidents tool in simple one-line-bullet-points format)
+    - List past incidents (from the get_past_incidents tool in simple one-line-bullet-points format. No more than one sentence per line with a link to the full report)
 
     Stops and ask user to take some time to review the above materials. Once the user is ready, continue with the next step by using transfer action.
         

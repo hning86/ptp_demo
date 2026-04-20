@@ -3,7 +3,7 @@ const presetPrompts = {
         { id: "btn_cable_pull", label: "Pull Cable", text: "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done." },
         { id: "btn_yes", label: "Yes", text: "Yes" },
         { id: "btn_no", label: "No", text: "No" },
-        { id: "btn_new_members", label: "New Member", text: "We have a new member in the crew. This is his first day at the job site." },
+        { id: "btn_new_members", label: "New Member", text: "We have a new member in the crew. This is his first day at the job site. He might need some extra help." },
         { id: "btn_ready", label: "Ready", text: "We are ready to move on to the next step." }
     ],
     2: [
