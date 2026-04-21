@@ -2,6 +2,17 @@
 
 An interactive, multi-scene visual showcase mimicking continuous Pre-Task Planning (PTP) compliance across field operations via modular AI Agent pipelines.
 
+## Overview & User Journey
+
+The Craft PTP Agent demo leverages the Google Agent Development Kit (ADK) to simulate an end-to-end digital safety compliance assistant for modern construction environments (modeled around data center deployments). 
+
+The experience follows a structured daily workflow:
+1. **Morning Task Initiation**: Crews declare geographic staging targets. The core orchestrator leverages BigQuery to sweep cross-trade schedule conflicts immediately.
+2. **Dynamic Mitigation Search**: Context-aware algorithms query structured Vertex AI RAG repositories against safety requirements to highlight hazards.
+3. **Iterative Optimization**: Generates baseline spreadsheets (`PTP v1`) subsequently hardened into `PTP v2` utilizing team substitution rules. 
+4. **Adaptive Reassessment ("Take Two")**: Intercepts active site blockers (like equipment layout changes) gracefully.
+5. **Shift Closeout (Plus/Delta)**: Validates performance KPIs, safety milestones, and physical fatigue management.
+
 ## Project Contents
 
 - **`backend/`**: Python microservice mapping Google ADK inference workflows via a centralized agent topology:
