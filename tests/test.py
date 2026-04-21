@@ -28,16 +28,21 @@ async def test_agent():
     session_id = "test-session-1"
     
     turns = [
-        "Hello! I am a new crew member. I need help with Pre-Task Planning.",
+        "Hello! I am a crew leader. I need help with Pre-Task Planning.",
         "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done.",
         "Yes, please analyze hazards of the task you found that conflicts with my main task today.",
         "Great, now please generate the PTP v1.",
-        "Please check the weather conditions. And also we have a new member in the crew. This is his first day at the job site. He might need some extra help."
+        "Please check the weather conditions. And also we have a new member in the crew. This is his first day at the job site. He might need some extra help.",
         "We are ready to move on to the next step.",
         "pause work and reassess the plan",
         "Work area has become congested and we can't drive the scissor lift in. Can you suggest some alternatives?",
         "Yes please go ahead.",
-        "We are doing OK. Just a little tired. nothing unusual. We will be fine."
+        "We are doing OK. Just a little tired. nothing unusual. We will be fine.",
+        "Great, please generate the updated plan.",
+        "We are done for the day and are getting ready to wrap up.",
+        "What went well today: The weather was great and we got the main task done. Thew new crew member was onboarded quickly and job was done safely.",
+        "What could be improved or done differently tomorrow: It was a bit windy. Can we schedule some more tasks indoors tomorrow?",
+        "No, that is all."
     ]
     
     for message in turns:

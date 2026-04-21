@@ -80,6 +80,16 @@ document.querySelectorAll(".scene-btn").forEach(btn => {
                 userInput.value = "pause work and reassess the plan";
                 document.getElementById("message-form").requestSubmit();
             }
+        } else if (selectedScene === 3) {
+            updatePresets();
+            addLog("Initiated End of Shift Plus/Delta session.");
+
+            // Automatically send message to agent
+            const userInput = document.getElementById("user-input");
+            if (userInput) {
+                userInput.value = "We are done for the day and are getting ready to wrap up.";
+                document.getElementById("message-form").requestSubmit();
+            }
         } else {
             currentScene = selectedScene;
             updatePresets();
@@ -175,6 +185,14 @@ if (input && form) {
                 if (swatBtn) {
                     swatBtn.disabled = false;
                     addLog("SWAT-2 button enabled.");
+                }
+            }
+            
+            if (accumulatedText.includes("PTP v3 Generated") || accumulatedText.includes("PTP v2 Generated")) {
+                const eosBtn = document.getElementById("scene-3-btn");
+                if (eosBtn) {
+                    eosBtn.disabled = false;
+                    addLog("End of Shift button enabled.");
                 }
             }
             
