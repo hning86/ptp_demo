@@ -647,9 +647,9 @@ body {
 .sidebar-btn {
     margin: 6px 12px;
     width: calc(100% - 24px);
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
+    background-color: hsl(210, 20%, 96%);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
     padding: 12px;
     border-radius: 6px;
     cursor: pointer;
@@ -658,11 +658,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .sidebar-btn:hover {
-    background-color: hsl(217, 89%, 50%);
+    background-color: hsl(210, 20%, 92%);
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
 }
 
 /* Fly-out Panes (Schedule & Docs) */
