@@ -12,6 +12,9 @@ fetch("/safety-docs")
                     if (match[0].endsWith(".00")) {
                         docsMapping[match[0].slice(0, -3)] = doc.url;
                     }
+                } else if (doc.title.includes("Energy Wheel")) {
+                    docsMapping["Energy Wheel"] = doc.url;
+                    docsMapping["Energy Wheel.pdf"] = doc.url;
                 }
             });
         }
@@ -19,7 +22,7 @@ fetch("/safety-docs")
     .catch(err => console.error("Failed to load safety docs mapping:", err));
 
 export function embedSafetyDocs(html) {
-    const docRegex = /(CON-EHS-TSS-\d{3}(?:\.\d{2})?)/g;
+    const docRegex = /(CON-EHS-TSS-\d{3}(?:\.\d{2})?|Energy Wheel(?:\.pdf)?)/g;
     return html.replace(docRegex, (match) => {
         const url = docsMapping[match] || docsMapping[match + ".00"];
         if (url) {
