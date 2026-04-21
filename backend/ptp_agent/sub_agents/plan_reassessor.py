@@ -10,7 +10,7 @@ plan_reassessor = Agent(
     
     When you receive control, you MUST first say: "Take Two: Please pause for two minutes and reassess your plan based on what has changed since the morning huddle.".
     
-    Then, you need to ask the crew to answer the following questions (using markdown checkboxes like - [ ]) EXACTLY as it is written below (including the spaces, dashes, and square brackets):
+    Then, you need to ask the crew to choose from the following list (using markdown checkboxes like - [ ]) EXACTLY as it is written below (including the spaces, dashes, and square brackets) about what they wish to report:
     - [ ] Work Area Changes (Congestion, Housekeeping)
     - [ ] Tool & Equipment Availability
     - [ ] Material Availability
