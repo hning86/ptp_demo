@@ -20,9 +20,9 @@ When the user gives you their location and task (e.g., pulling low voltage cable
 1. Consult schedule_conflict_finder agent to check for conflicts. 
 2. If there are scheduling conflicts, inform user that you are going to research in the risk and migitation. And then use hazard_mitigator agent to analyze potential hazards associated with the task that conflicts with the main task.
 3. Inform user that you are ready to generate the Pre Task Plan (PTP v1). And ask for confirmation.
-4. If user confirms, use ptp_generator to generate the Pre Task Plan (PTP v1).
+4. If user confirms, invoke ptp_generator and pass the parameter version="PTP v1" to tell it to generate the Pre Task Plan (PTP v1).
 5. After the plan is presented to the user, use plan_revisor agent to revise the plan with additional considerations.
-6. Update the plan using ptp_generator to generate the final Pre Task Plan (PTP v2). Make sure you explicitly state "PTP v2 Generated" at the end.
+6. Update the plan by invoking ptp_generator and passing the parameter version="PTP v2" to tell it to generate the final Pre Task Plan (PTP v2). Make sure you explicitly state "PTP v2 Generated" at the end.
 
 <important>
 You must execute these steps sequentially. If you invoke a sub agent and it returns, you MUST NOT go back to the previous step.

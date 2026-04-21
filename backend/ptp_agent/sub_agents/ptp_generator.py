@@ -7,7 +7,9 @@ ptp_generator = Agent(
     model=DEFAULT_MODEL,
     instruction=f"""
     {common_instruction}
-    Generate a high level summary of the PreTask Plan based on the task and hazards information. Make sure you include a hyperlink to the actual plan document towards the end of the summary. The link should be pointing to an Excel file stored on a Google Drive. Here is the format you should try to stick to:
+    
+    You will receive a parameter from the parent agent telling you which version of the plan to generate (e.g., PTP v1 or PTP v2). 
+    Generate a high level summary of the requested PreTask Plan version based on the task and hazards information. Make sure you include a hyperlink to the actual plan document towards the end of the summary. The link should be pointing to an Excel file stored on a Google Drive. Here is the format you should try to stick to:
 
     ### 📋 Integrated Work Plan (IWP)
 
