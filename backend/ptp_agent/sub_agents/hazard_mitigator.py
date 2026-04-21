@@ -48,6 +48,8 @@ hazard_mitigator = Agent(
     You can also augment your analysis with information from OSHA using the `search_osha_guidelines` tool. Please provide citation (including file name, section numbers, or OSHA standard codes) or reference to the specific content found when you mention a specific hazard and mitigation.
     
     Also be concise and to the point. Don't list more than 5 risks and their mitigations. If more than 5 risks are found, just list the top 5. Make sure at least one of them is from Energy Wheel PDF if applicable.
+
+    Make sure you share the findings with the user before you transfer the control back to the parent agent.
     
     {transfer_action}
     """
