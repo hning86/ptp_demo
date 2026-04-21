@@ -1,5 +1,34 @@
 // UI Utilities and Dynamic Renderers
 
+let docsMapping = {};
+fetch("/safety-docs")
+    .then(res => res.json())
+    .then(data => {
+        if (Array.isArray(data)) {
+            data.forEach(doc => {
+                const match = doc.title.match(/CON-EHS-TSS-\d{3}(?:\.\d{2})?/);
+                if (match) {
+                    docsMapping[match[0]] = doc.url;
+                    if (match[0].endsWith(".00")) {
+                        docsMapping[match[0].slice(0, -3)] = doc.url;
+                    }
+                }
+            });
+        }
+    })
+    .catch(err => console.error("Failed to load safety docs mapping:", err));
+
+export function embedSafetyDocs(html) {
+    const docRegex = /(CON-EHS-TSS-\d{3}(?:\.\d{2})?)/g;
+    return html.replace(docRegex, (match) => {
+        const url = docsMapping[match] || docsMapping[match + ".00"];
+        if (url) {
+            return `<a href="${url}" target="_blank" class="safety-doc-link" style="color: var(--primary-blue); text-decoration: underline;">${match}</a>`;
+        }
+        return match;
+    });
+}
+
 export function addLog(msg) {
     const logList = document.getElementById("log-list");
     if (!logList) return;

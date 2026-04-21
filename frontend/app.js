@@ -1,5 +1,5 @@
 import { presetPrompts, allShortcutIds } from './presets.js';
-import { addLog, embedYouTube, handleScriptTriggers, renderSchedule, renderDocs } from './ui-handlers.js';
+import { addLog, embedYouTube, embedSafetyDocs, handleScriptTriggers, renderSchedule, renderDocs } from './ui-handlers.js';
 
 let currentScene = 1;
 let sceneStepIndex = 0;
@@ -154,7 +154,7 @@ if (input && form) {
                                     .join("\n");
 
                                 const parsedHtml = marked.parse(filteredText);
-                                agentDiv.innerHTML = embedYouTube(parsedHtml) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+                                agentDiv.innerHTML = embedSafetyDocs(embedYouTube(parsedHtml)) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
                                 chatWindow.scrollTop = chatWindow.scrollHeight;
                             }
                         } catch (err) {}
@@ -167,7 +167,7 @@ if (input && form) {
                 .join("\n");
 
             const parsedHtml = marked.parse(filteredText);
-            agentDiv.innerHTML = embedYouTube(parsedHtml);
+            agentDiv.innerHTML = embedSafetyDocs(embedYouTube(parsedHtml));
             handleScriptTriggers(accumulatedText);
             
             if (accumulatedText.includes("PTP v2 Generated")) {
@@ -222,16 +222,16 @@ async function triggerHiddenGreeting() {
                         const parsed = JSON.parse(jsonStr);
                         if (parsed.text) {
                             accumulatedText += parsed.text;
-                            agentDiv.innerHTML = marked.parse(accumulatedText) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
+                            agentDiv.innerHTML = embedSafetyDocs(marked.parse(accumulatedText)) + '<span class="typing-indicator"><span></span><span></span><span></span></span>';
                         }
                     } catch (err) { }
                 }
             }
         }
-        agentDiv.innerHTML = marked.parse(accumulatedText);
+        agentDiv.innerHTML = embedSafetyDocs(marked.parse(accumulatedText));
         chatWindow.scrollTop = chatWindow.scrollHeight;
     } catch (err) {
-        agentDiv.innerHTML = marked.parse("Good morning! Welcome to UNO3 construction management system. Ready for shift briefs?");
+        agentDiv.innerHTML = embedSafetyDocs(marked.parse("Good morning! Welcome to UNO3 construction management system. Ready for shift briefs?"));
     }
 }
 
