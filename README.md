@@ -4,23 +4,40 @@ An interactive, multi-scene visual showcase mimicking continuous Pre-Task Planni
 
 ## Project Contents
 
-- **`backend/`**: Python microservice mapping independent Google ADK inference workflows across 3 stages:
-  - **`scene_1_agent/`**: Coordinates Morning Task summaries.
+- **`backend/`**: Python microservice mapping Google ADK inference workflows via a centralized agent topology:
+  - **`ptp_agent`**: Coordinates the full shift lifecycle using modular sub-agents.
     ```mermaid
     flowchart TD
         R["root_agent (ptp_agent)"]
         S["schedule_conflict_finder"]
-        H["hazard_mitigator (Energy Wheel RAG)"]
+        H["hazard_mitigator"]
         P["ptp_generator"]
-        A["plan_augmentor"]
+        PR["plan_revisor"]
+        PA["plan_reassessor"]
+        W["shift_wrapper"]
 
-        R -->|"1. Check location overlaps"| S
-        R -->|"2. Assess task hazard state"| H
-        R -->|"3. Generate core plan"| P
-        R -->|"4. Request team substitutions"| A
+        R -->|"1. Check schedule conflicts"| S
+        R -->|"2. Analyze hazards"| H
+        R -->|"3. Generate PTP v1"| P
+        R -->|"4. Revise plan"| PR
+        R -->|"5. Generate PTP v2"| P
+        R -->|"6. Pause & reassess"| PA
+        R -->|"7. Generate PTP v3"| P
+        R -->|"8. Wrap up shift"| W
     ```
-  - **`scene_2_agent/`**: Audits local stop-work procedures.
-  - **`scene_3_agent/`**: Aggregates Continuous Improvements (Plus/Delta).
+
+### Sub-Agents, Tools & Data Sources
+
+| Sub-Agent | Tools Implemented | Backing Data Source / API |
+| :--- | :--- | :--- |
+| **`schedule_conflict_finder`** | `search_schedule_conflict` | Google BigQuery (`simulated_schedule`) |
+| **`hazard_mitigator`** | `search_safety_guideline` | Vertex AI RAG (Safety Requirement PDFs) |
+| **`ptp_generator`** | *Implicit Generation* | Context Ingestion |
+| **`plan_revisor`** | `get_current_weather` | Environment Overrides |
+| **`learning_resources_provider`**| `get_past_incidents`<br>`get_scissor_lift_video_link` | Mock IRIS logs & YouTube references |
+| **`plan_reassessor`** | `search_safety_guideline` | Vertex AI RAG (Safety Requirement PDFs) |
+| **`shift_wrapper`** | *Implicit Collection* | Form Payload state |
+
 - **`index.html`**: Embedded interactive viewer styling responsive checklists, real-time mock connection events, and Presenter action templates.
 
 ## Running Locally
