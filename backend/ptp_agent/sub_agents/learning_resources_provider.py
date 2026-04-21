@@ -1,5 +1,5 @@
 from google.adk.agents import Agent
-from .shared import transfer_action, common_instruction
+from .shared import transfer_action, common_instruction, DEFAULT_MODEL
 
 def get_past_incidents(task: str) -> str:
     """
@@ -30,7 +30,7 @@ def get_scissor_lift_video_link() -> str:
 
 learning_resources_provider = Agent(
     name="learning_resources_provider",
-    model="gemini-2.5-flash",
+    model=DEFAULT_MODEL,
     instruction=f"""
     {common_instruction}
     Provide learning resources for the safety topic, which are related to the task. First, use the get_past_incidents tool to retrieve past incidents for the task. Also use get_scissor_lift_video_link to get the video link. Then display the following as a list of resources: 

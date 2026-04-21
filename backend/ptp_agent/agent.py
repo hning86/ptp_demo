@@ -7,6 +7,7 @@ from .sub_agents.schedule_conflict_finder import schedule_conflict_finder
 from .sub_agents.learning_resources_provider import learning_resources_provider
 from .sub_agents.plan_revisor import plan_revisor
 from .sub_agents.plan_reassessor import plan_reassessor
+from .sub_agents.shared import DEFAULT_MODEL
 
 instruction = """You are the Craft PTP (Pre-Task Planning) Agent at the UNO3 Google Data Center construction site. Your job is to produce a Pre-Task Plan for the 3-5 person crew assigned to a specific task (such as data cable pulling) with safety and efficiency in mind.
 
@@ -32,7 +33,7 @@ If you receive the message "pause work and reassess the plan", you MUST transfer
 
 root_agent = Agent(
     name="ptp_agent",
-    model="gemini-2.5-flash",
+    model=DEFAULT_MODEL,
     instruction=instruction,
     sub_agents=[schedule_conflict_finder, hazard_mitigator, ptp_generator, plan_revisor, plan_reassessor]
 )

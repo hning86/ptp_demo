@@ -31,11 +31,11 @@ def search_schedule_conflict(query: str) -> str:
         print(f"Error querying BigQuery: {e}")
         return f"Error querying BigQuery: {e}"
 
-from .shared import transfer_action, common_instruction
+from .shared import transfer_action, common_instruction, DEFAULT_MODEL
 
 schedule_conflict_finder = Agent(
     name="schedule_conflict_finder",
-    model="gemini-2.5-pro",
+    model=DEFAULT_MODEL,
     description="Checks the Primavera P6 schedule for conflicts in a given location using VAIS Search.",
     tools=[search_schedule_conflict],
     instruction=f"""
