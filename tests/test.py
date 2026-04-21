@@ -40,8 +40,8 @@ async def test_agent():
         "We are doing OK. Just a little tired. nothing unusual. We will be fine.",
         "Great, please generate the updated plan.",
         "We are done for the day and are getting ready to wrap up.",
-        "What went well today: The weather was great and we got the main task done. Thew new crew member was onboarded quickly and job was done safely.",
-        "What could be improved or done differently tomorrow: It was a bit windy. Can we schedule some more tasks indoors tomorrow?",
+        "What went well today: We completed the task safely with zero incidents and onboarded the new crew member successfully.",
+        "What could be improved or done differently tomorrow: Work area congestion caused minor equipment delays, and afternoon fatigue impacted our pace near the end of the shift.",
         "No, that is all."
     ]
     
