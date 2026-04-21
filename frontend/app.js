@@ -1,22 +1,11 @@
-const presetPrompts = {
-    1: [
-        { id: "btn_cable_pull", label: "Pull Cable", text: "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done." },
-        { id: "btn_yes", label: "Yes", text: "Yes" },
-        { id: "btn_no", label: "No", text: "No" },
-        { id: "btn_new_members", label: "New Member", text: "We have a new member in the crew. This is his first day at the job site. He might need some extra help." },
-        { id: "btn_ready", label: "Ready", text: "We are ready to move on to the next step." }
-    ],
-    2: [
-        { id: "btn_cable_pull", label: "Take Two", text: "Take Two" },
-        { id: "btn_yes", label: "Congestion", text: "The aisle is congested and the lift cannot access the work spot." },
-        { id: "btn_no", label: "Yes", text: "Yes, extension ladder works fine." },
-        { id: "btn_ready", label: "Good", text: "No, we are good to proceed." }
-    ],
-    3: [
-        { id: "btn_cable_pull", label: "End Shift", text: "End of Shift" },
-        { id: "btn_yes", label: "Delta", text: "The plan worked. Delta: Pre-installed trays had sharp edges that slowed progress." }
-    ]
-};
+const presetPrompts = [
+    { id: "btn_cable_pull", label: "Pull Cable", text: "We are at the UNO3 campus, Area B of the data hall. We are about to pull low voltage cable in aisle 3. The cable trays are already installed. I have a crew of 3 people today and we have 10 hours to get the work done." },
+    { id: "btn_yes", label: "Yes", text: "Yes please go ahead." },
+    { id: "btn_new_members", label: "New Member", text: "We have a new member in the crew. This is his first day at the job site. He might need some extra help." },
+    { id: "btn_congestion", label: "Congestion", text: "Work area has become congested and we can't drive the scissor lift in. Can you suggest some alternatives?" },
+    { id: "btn_fatigue", label: "Fatigue", text: "We are doing OK. Just a little tired. nothing unusual. We will be fine." },
+    { id: "btn_ready", label: "Ready", text: "We are ready to move on to the next step." }
+];
 
 
 
@@ -28,20 +17,21 @@ const chatWindow = document.getElementById("chat-window");
 const interactiveForms = document.getElementById("interactive-forms");
 const logList = document.getElementById("log-list");
 
-const allShortcutIds = ["btn_cable_pull", "btn_yes", "btn_no", "btn_new_members", "btn_ready"];
+const allShortcutIds = ["btn_cable_pull", "btn_yes", "btn_new_members", "btn_congestion", "btn_fatigue", "btn_ready"];
 
 // Setup quick preset buttons
-function updatePresets(sceneNum = currentScene) {
+function updatePresets() {
     allShortcutIds.forEach(id => {
         const btn = document.getElementById(id);
         if (btn) btn.style.display = "none";
     });
 
-    const presets = presetPrompts[sceneNum] || [];
+    const presets = presetPrompts;
     presets.forEach(item => {
         const btn = document.getElementById(item.id);
         if (btn) {
             btn.textContent = item.label;
+            btn.setAttribute("data-tooltip", item.text);
             btn.style.display = "inline-block";
             btn.onclick = () => {
                 document.getElementById("user-input").value = item.text;
@@ -88,8 +78,8 @@ document.querySelectorAll(".scene-btn").forEach(btn => {
         interactiveForms.innerHTML = "";
         
         if (selectedScene === 2) {
-            // Stay on Scene 1 agent, but load Scene 2 presets
-            updatePresets(2);
+            // Stay on Scene 1 agent, but load Scene 2 presets (now overridden to scene 1)
+            updatePresets();
             
             // Display stop graphic in message pane
             const activeLayer = document.getElementById("chat-scene-1");
@@ -328,29 +318,9 @@ form.addEventListener("submit", async (e) => {
         addLog("Received full streaming context.");
         
     } catch (error) {
-        // Reliable mock fallbacks guaranteeing the presenter always wins!
-        console.log("Using reliable automated templates...");
-        let fallback = "Message received and processed successfully.";
-        
-        if (msg.includes("UNO3 campus") || msg.includes("pull low voltage cable")) {
-            fallback = "Thank you. I have analyzed the requirements for low voltage cable pulling. Based on the P6 schedule, this cable pulling task overlaps with an overhead mechanical pipeline installation. Please make sure you take the below precautions: \n1. Secure lock-out/tag-out\n2. Implement edge shielding\n3. Coordinate air space. \nTo finalize the task-specific elements of today's plan, please choose all that apply:";
-        } else if (msg.includes("new crew member")) {
-            fallback = "Understood. I am updating your plan to Version 2. Today's weather is mild. Because you have a new crew member, I have added the following learning resources to your plan: \n- Toolbox Fall Hazards Doc\n- Scissor Lift Operations Video\n- Relevant past IRIS congestion logs.";
-        } else if (msg.includes("congested") || msg.includes("lift cannot access")) {
-            fallback = "Change identified. Would an extension ladder be a suitable alternative to access the overhead work area?";
-        } else if (msg.includes("ladder will work")) {
-            fallback = "OK I will update the plan to reflect the ladder usage, the requirements inspection procedures. Action Required: A supervisor must sign this permit before ladder work resumes. Do you accept these updates?";
-        } else if (msg.includes("Updates accepted")) {
-            fallback = "Also tell me how are the crew doing. Any mental or physical fatigue concerns?";
-        } else if (msg.includes("overwhelmed")) {
-            fallback = "I suggest a 20 minutes break and recharge time. I will build that into the revised plan. Anything else?";
-        } else if (msg.includes("plan worked")) {
-            fallback = "Thank you. I have captured your Plus/Delta findings. I will integrate this edge-guard recommendation into future PTPs for this campus so the system becomes smarter for the next run. I am now archiving today's final plan.";
-        }
-        
-        agentDiv.innerHTML = marked.parse(fallback);
-        handleScriptTriggers(fallback);
-        addLog("Mock simulation response applied.");
+        addLog(`Error: ${error.message}`);
+        agentDiv.classList.remove("thinking");
+        agentDiv.innerHTML = marked.parse(`**Error:** ${error.message || error}`);
     }
 });
 
