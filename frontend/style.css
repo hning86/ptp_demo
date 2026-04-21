@@ -658,7 +658,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     padding-left: 16px;
-    gap: 12px;
+    gap: 16px;
     transition: all 0.2s ease;
 }
 
