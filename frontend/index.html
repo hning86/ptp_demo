@@ -49,12 +49,18 @@
                     <span>Plus/Delta Session</span>
                 </button>
             </nav>
-            <button class="sidebar-btn" id="show-schedule-btn">
-                📅 View P6 Schedule
-            </button>
-            <button class="sidebar-btn" id="show-docs-btn">
-                📚 Safety Documents
-            </button>
+            <div class="data-sources-group">
+                <h3>Data sources</h3>
+                <button class="sidebar-btn" id="show-schedule-btn">
+                    📅 View P6 Schedule
+                </button>
+                <button class="sidebar-btn" id="show-docs-btn">
+                    📚 Safety Documents
+                </button>
+                <button class="sidebar-btn" id="show-weather-btn">
+                    🌤 View Weather
+                </button>
+            </div>
             <div class="system-log" id="activity-log">
                 <h3>System Actions</h3>
                 <ul id="log-list">
@@ -112,6 +118,16 @@
         </div>
         <div class="pane-content" id="docs-content">
             <!-- Safety docs will be inserted here -->
+        </div>
+    </div>
+
+    <div id="weather-pane" class="flyout-pane">
+        <div class="pane-header">
+            <h3>Current Weather Advisory</h3>
+            <button id="close-weather-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="pane-content" id="weather-content">
+            <!-- Weather data will be inserted here -->
         </div>
     </div>
 

@@ -17,6 +17,7 @@ from google.genai import types
 
 # Import our three custom scene agents
 from .ptp_agent.agent import root_agent as craft_ptp_agent
+from .ptp_agent.sub_agents.shared import get_current_weather
 
 
 app = FastAPI(title="Craft PTP Interactive Demo App")
@@ -58,6 +59,10 @@ async def get_schedule():
         return schedule
     except Exception as e:
         return {"error": str(e)}
+
+@app.get("/weather")
+async def get_weather():
+    return {"weather": get_current_weather()}
 
 @app.get("/safety-docs")
 async def get_docs():

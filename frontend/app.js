@@ -260,8 +260,24 @@ const showScheduleBtn = document.getElementById("show-schedule-btn");
 const closeScheduleBtn = document.getElementById("close-schedule-btn");
 const schedulePane = document.getElementById("schedule-pane");
 
+const showDocsBtn = document.getElementById("show-docs-btn");
+const closeDocsBtn = document.getElementById("close-docs-btn");
+const docsPane = document.getElementById("docs-pane");
+
+const showWeatherBtn = document.getElementById("show-weather-btn");
+const closeWeatherBtn = document.getElementById("close-weather-btn");
+const weatherPane = document.getElementById("weather-pane");
+
+function closeAllPanes() {
+    if (schedulePane) schedulePane.classList.remove("open");
+    if (docsPane) docsPane.classList.remove("open");
+    if (weatherPane) weatherPane.classList.remove("open");
+}
+
+// Schedule Pane Logic
 if (showScheduleBtn && schedulePane && closeScheduleBtn) {
     showScheduleBtn.addEventListener("click", () => {
+        closeAllPanes();
         renderSchedule();
         schedulePane.classList.add("open");
     });
@@ -272,17 +288,50 @@ if (showScheduleBtn && schedulePane && closeScheduleBtn) {
 }
 
 // Docs Pane Logic
-const showDocsBtn = document.getElementById("show-docs-btn");
-const closeDocsBtn = document.getElementById("close-docs-btn");
-const docsPane = document.getElementById("docs-pane");
-
 if (showDocsBtn && docsPane && closeDocsBtn) {
     showDocsBtn.addEventListener("click", () => {
+        closeAllPanes();
         renderDocs();
         docsPane.classList.add("open");
     });
 
     closeDocsBtn.addEventListener("click", () => {
         docsPane.classList.remove("open");
+    });
+}
+
+// Weather Pane Logic
+if (showWeatherBtn && weatherPane && closeWeatherBtn) {
+    showWeatherBtn.addEventListener("click", async () => {
+        closeAllPanes();
+        const weatherContent = document.getElementById("weather-content");
+        if (weatherContent) {
+            weatherContent.innerHTML = "<p>Loading weather advisory...</p>";
+            try {
+                const res = await fetch("/weather");
+                const data = await res.json();
+                weatherContent.innerHTML = `
+                    <div class="weather-card">
+                        <div class="weather-header">
+                            <span class="weather-icon">🌧️</span>
+                            <div class="weather-meta">
+                                <h4>Weather Advisory</h4>
+                                <span class="weather-status">Active Staging Conditions</span>
+                            </div>
+                        </div>
+                        <div class="weather-body">
+                            <p>${data.weather}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                weatherContent.innerHTML = `<p>Error loading weather: ${err.message}</p>`;
+            }
+        }
+        weatherPane.classList.add("open");
+    });
+
+    closeWeatherBtn.addEventListener("click", () => {
+        weatherPane.classList.remove("open");
     });
 }

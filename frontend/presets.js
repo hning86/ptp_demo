@@ -5,7 +5,7 @@ export const presetPrompts = [
     { id: "btn_congestion", label: "Congestion", text: "Job site has become congested and we can't drive the scissor lift in. Can you suggest some alternatives?" },
     { id: "btn_fatigue", label: "Fatigue", text: "We are doing OK. Just a little tired, nothing unusual. We will be fine." },
     { id: "btn_ready", label: "Ready", text: "We are ready to move on to the next step." },
-    { id: "btn_no", label: "No.", text: "No, I am good." },
+    { id: "btn_no", label: "No", text: "No, I am good." },
     { id: "btn_feedback", label: "Feedback", text: "What went well: We completed the task safely with zero incidents, met production targets, and onboarded the new crew member successfully. \nWhat can be improved: Work area congestion caused minor equipment delays, and afternoon fatigue impacted our pace near the end of the shift." }
 ];
 
