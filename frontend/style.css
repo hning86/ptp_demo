@@ -124,6 +124,7 @@ body {
 .app-main {
     display: grid;
     grid-template-columns: 300px 1fr;
+    grid-template-rows: 100%;
     flex: 1;
     overflow: hidden;
 }
@@ -253,6 +254,7 @@ body {
     min-height: 0;
     min-width: 0;
     background-color: var(--bg-color);
+    overflow: hidden;
 }
 
 /* Visual Cue Top bar */
