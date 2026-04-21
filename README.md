@@ -13,16 +13,35 @@ An interactive, multi-scene visual showcase mimicking continuous Pre-Task Planni
         H["hazard_mitigator"]
         P["ptp_generator"]
         PR["plan_revisor"]
+        LRP["learning_resources_provider"]
         PA["plan_reassessor"]
         W["shift_wrapper"]
 
-        R -->|"1. Check schedule conflicts"| S
+        BQ[("BigQuery: simulated_schedule")]
+        RAG[("Vertex AI RAG: Safety Requirements")]
+        IRIS[("Mock IRIS Logs & YouTube")]
+        WX[("Weather Advisory")]
+
+        R -->|"1. Check conflicts"| S
+        S -->|"search_schedule_conflict"| BQ
+        
         R -->|"2. Analyze hazards"| H
+        H -->|"search_safety_guideline"| RAG
+        
         R -->|"3. Generate PTP v1"| P
+        
         R -->|"4. Revise plan"| PR
+        PR -->|"get_current_weather"| WX
+        PR -->|"Consult"| LRP
+        LRP -->|"get_past_incidents / video"| IRIS
+        
         R -->|"5. Generate PTP v2"| P
+        
         R -->|"6. Pause & reassess"| PA
+        PA -->|"search_safety_guideline"| RAG
+        
         R -->|"7. Generate PTP v3"| P
+        
         R -->|"8. Wrap up shift"| W
     ```
 
