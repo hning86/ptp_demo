@@ -32,12 +32,14 @@ The experience follows a structured daily workflow:
         RAG[("Vertex AI RAG: Safety Requirements")]
         IRIS[("Mock IRIS Logs & YouTube")]
         WX[("Weather Advisory")]
+        OSHA[("OSHA.gov Google Search")]
 
         R -->|"1. Check conflicts"| S
         S -->|"search_schedule_conflict"| BQ
         
         R -->|"2. Analyze hazards"| H
         H -->|"search_safety_guideline"| RAG
+        H -->|"search_osha_guidelines"| OSHA
         
         R -->|"3. Generate PTP v1"| P
         
@@ -61,7 +63,7 @@ The experience follows a structured daily workflow:
 | Sub-Agent | Tools Implemented | Backing Data Source / API |
 | :--- | :--- | :--- |
 | **`schedule_conflict_finder`** | `search_schedule_conflict` | Google BigQuery (`simulated_schedule`) |
-| **`hazard_mitigator`** | `search_safety_guideline` | Vertex AI RAG (Safety Requirement PDFs) |
+| **`hazard_mitigator`** | `search_safety_guideline`<br>`search_osha_guidelines` | Vertex AI RAG (Safety PDFs) & Google Search Grounding |
 | **`ptp_generator`** | *Implicit Generation* | Context Ingestion |
 | **`plan_revisor`** | `get_current_weather` | Environment Overrides |
 | **`learning_resources_provider`**| `get_past_incidents`<br>`get_scissor_lift_video_link` | Mock IRIS logs & YouTube references |
