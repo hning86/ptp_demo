@@ -180,21 +180,6 @@ if (input && form) {
             agentDiv.innerHTML = embedSafetyDocs(embedYouTube(parsedHtml));
             handleScriptTriggers(accumulatedText);
             
-            if (accumulatedText.includes("PTP v2 Generated")) {
-                const swatBtn = document.getElementById("scene-2-btn");
-                if (swatBtn) {
-                    swatBtn.disabled = false;
-                    addLog("SWAT-2 button enabled.");
-                }
-            }
-            
-            if (accumulatedText.includes("PTP v3 Generated") || accumulatedText.includes("PTP v2 Generated")) {
-                const eosBtn = document.getElementById("scene-3-btn");
-                if (eosBtn) {
-                    eosBtn.disabled = false;
-                    addLog("End of Shift button enabled.");
-                }
-            }
             
             addLog("Received full streaming context.");
             
