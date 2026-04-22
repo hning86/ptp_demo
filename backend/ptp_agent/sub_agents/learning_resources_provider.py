@@ -1,78 +1,50 @@
 from google.adk.agents import Agent
+from google.cloud import bigquery
 from .shared import transfer_action, common_instruction, DEFAULT_MODEL
-
 import json
 
 def get_past_incidents(task: str) -> str:
     """
-    Retrieve past incidents from Iris database for a given task.
+    Retrieve relevant past incidents from BigQuery for a given task.
     """
-    incidents = [
-        {
-            "id": "IRIS-2025-0302",
-            "date": "2025-03-02 2:39PM",
-            "task": "Electrical Work / Scissor Lift Operation",
-            "incident": "Electrician was working in the DC1 east zone when his scissor lift came in contact with a nearby ladder crushing the ladder on impact. No worker was using the ladder.",
-            "type": "Near Miss",
-            "key_focus": "Barricades requirements, Spotters & Banksperson requirements.",
-            "suggested_resource": "OSHA Toolbox Talk on working around tight spaces with scissor lifts."
-        },
-        {
-            "id": "IRIS-2024-0623",
-            "date": "2024-06-23 3:45PM",
-            "task": "Overhead Cable Pulling",
-            "incident": "Worker was working on overhead cable pulling when he felt a sharp pain in his left shoulder.",
-            "type": "Injury / Ergonomic Hazard",
-            "key_focus": "Ergonomics",
-            "suggested_resource": "OSHA Worksite Ergonomics Guide (https://www.oshaeducationcenter.com/worksite-ergonomics-guide/)"
-        },
-        {
-            "id": "IRIS-2025-1114",
-            "date": "2025-11-14 10:15AM",
-            "task": "Hot Work / Welding",
-            "incident": "Welder dropped a hot slag spark onto an empty cardboard box causing a small localized fire. Extinguished immediately by fire watch.",
-            "type": "Fire Hazard / Near Miss",
-            "key_focus": "Fire watch protocol, clearing combustibles from hot work zones.",
-            "suggested_resource": "NFPA 51B Standard for Fire Prevention During Welding."
-        },
-        {
-            "id": "IRIS-2025-0822",
-            "date": "2025-08-22 1:30PM",
-            "task": "Working at Heights",
-            "incident": "Ironworker disconnected their safety lanyard temporarily to reach an out-of-bounds tool. Spotted by safety supervisor and corrected.",
-            "type": "Safety Violation / Near Miss",
-            "key_focus": "100% Tie-off enforcement, harness compliance.",
-            "suggested_resource": "OSHA Fall Protection Guidelines."
-        },
-        {
-            "id": "IRIS-2025-0505",
-            "date": "2025-05-05 9:00AM",
-            "task": "Material Handling",
-            "incident": "Reach forklift operator misjudged distance while turning in the staging area, striking a pallet racking unit causing structural bending.",
-            "type": "Property Damage",
-            "key_focus": "Operator awareness, load management, strict speed limits.",
-            "suggested_resource": "OSHA Powered Industrial Trucks Standard."
-        },
-        {
-            "id": "IRIS-2024-1201",
-            "date": "2024-12-01 11:00AM",
-            "task": "Excavation / Trenching",
-            "incident": "Minor trench wall collapse on the perimeter of a 4ft deep utility line trench. No workers were actively deployed inside the zone.",
-            "type": "Near Miss",
-            "key_focus": "Protective systems, trench shoring evaluation.",
-            "suggested_resource": "OSHA Trenching and Excavation Safety."
-        },
-        {
-            "id": "IRIS-2024-0915",
-            "date": "2024-09-15 4:00PM",
-            "task": "Personal Protective Equipment",
-            "incident": "Crew members identified removing mandatory safety eyewear due to fogging in humid staging environments.",
-            "type": "Safety Violation",
-            "key_focus": "Anti-fog lens alternatives, consistent PPE checks.",
-            "suggested_resource": "OSHA Eye and Face Protection."
-        }
-    ]
-    return json.dumps(incidents, indent=2)
+    project_id = "ninghai-ccai"
+    dataset_id = "ptp_demo"
+    table_id = "iris_incidents"
+    
+    client = bigquery.Client(project=project_id)
+    
+    # If task is provided, try to filter by task or incident content
+    # Otherwise return all
+    if task and task != "General":
+        query_str = f"""
+            SELECT * FROM `{project_id}.{dataset_id}.{table_id}`
+            WHERE LOWER(task) LIKE LOWER('%{task}%') 
+               OR LOWER(incident) LIKE LOWER('%{task}%')
+               OR LOWER(type) LIKE LOWER('%{task}%')
+        """
+    else:
+        query_str = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
+        
+    try:
+        query_job = client.query(query_str)
+        results = query_job.result()
+        
+        rows = []
+        for row in results:
+            rows.append(dict(row))
+            
+        # If no results found with filter, fallback to all records
+        if not rows and task and task != "General":
+            query_all = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
+            query_job = client.query(query_all)
+            results = query_job.result()
+            for row in results:
+                rows.append(dict(row))
+                
+        return json.dumps(rows, indent=2)
+    except Exception as e:
+        print(f"Error querying BigQuery: {e}")
+        return json.dumps([], indent=2)
 
 def get_scissor_lift_video_link() -> str:
     """
