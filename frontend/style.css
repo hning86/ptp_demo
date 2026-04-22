@@ -61,6 +61,19 @@ body {
 .title-stack h1 {
     font-size: 18px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.version-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    background-color: hsl(217, 91%, 95%);
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+    border: 1px solid hsl(217, 91%, 85%);
 }
 
 .site-tag {

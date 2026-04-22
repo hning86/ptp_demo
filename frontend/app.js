@@ -208,6 +208,17 @@ if (input && form) {
 
 updatePresets();
 
+// Fetch and display version
+fetch('/version.json')
+    .then(res => res.json())
+    .then(data => {
+        const versionDisplay = document.getElementById("version-display");
+        if (versionDisplay) {
+            versionDisplay.textContent = `v${data.version}`;
+        }
+    })
+    .catch(err => console.error("Failed to load version:", err));
+
 // Trigger automated initial handshake
 async function triggerHiddenGreeting() {
     const activeLayer = document.getElementById("chat-scene-1");

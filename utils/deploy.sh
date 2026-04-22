@@ -6,6 +6,10 @@ SERVICE_NAME="craft-ptp-demo"
 REGION="us-central1"
 PROJECT_ID="ninghai-ccai"
 
+# Increment version
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+python3 "$SCRIPT_DIR/increment_version.py"
+
 echo ">>> Deploying Craft PTP interactive frontend + backend to Google Cloud Run..."
 
 gcloud run deploy "$SERVICE_NAME" \
