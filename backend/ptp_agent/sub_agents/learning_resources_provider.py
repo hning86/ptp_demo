@@ -1,3 +1,4 @@
+import os
 from google.adk.agents import Agent
 from google.cloud import bigquery
 from .shared import transfer_action, common_instruction, DEFAULT_MODEL
@@ -7,9 +8,9 @@ def get_past_incidents(task: str) -> str:
     """
     Retrieve relevant past incidents from BigQuery for a given task.
     """
-    project_id = "ninghai-ccai"
-    dataset_id = "ptp_demo"
-    table_id = "iris_incidents"
+    project_id = os.environ.get("BQ_PROJECT_ID", "ninghai-ccai")
+    dataset_id = os.environ.get("BQ_DATASET_ID", "ptp_demo")
+    table_id = os.environ.get("BQ_IRIS_TABLE_ID", "iris_incidents")
     
     client = bigquery.Client(project=project_id)
     

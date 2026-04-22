@@ -1,11 +1,17 @@
 import json
 import os
 from google.cloud import bigquery
+from dotenv import load_dotenv
+
+# Load .env from backend directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
+backend_env = os.path.join(os.path.dirname(script_dir), 'backend', '.env')
+load_dotenv(backend_env)
 
 def load_iris_to_bq():
-    project_id = "ninghai-ccai"
-    dataset_id = "ptp_demo"
-    table_id = "iris_incidents"
+    project_id = os.environ.get("BQ_PROJECT_ID", "ninghai-ccai")
+    dataset_id = os.environ.get("BQ_DATASET_ID", "ptp_demo")
+    table_id = os.environ.get("BQ_IRIS_TABLE_ID", "iris_incidents")
     
     client = bigquery.Client(project=project_id)
     

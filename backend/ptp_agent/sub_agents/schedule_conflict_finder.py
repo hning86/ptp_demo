@@ -1,3 +1,4 @@
+import os
 from google.adk.agents import Agent
 from google.cloud import bigquery
 import json
@@ -10,9 +11,9 @@ def search_schedule_conflict(query: str) -> str:
     Search the Primavera P6 schedule for conflicts in a given location.
     Use this tool to find schedule overlaps.
     """
-    project_id = "ninghai-ccai"
-    dataset_id = "ptp_demo"
-    table_id = "simulated_schedule"
+    project_id = os.environ.get("BQ_PROJECT_ID", "ninghai-ccai")
+    dataset_id = os.environ.get("BQ_DATASET_ID", "ptp_demo")
+    table_id = os.environ.get("BQ_SCHEDULE_TABLE_ID", "simulated_schedule")
     
     client = bigquery.Client(project=project_id)
     

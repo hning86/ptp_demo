@@ -36,9 +36,9 @@ session_service = InMemorySessionService()
 
 @app.get("/schedule")
 async def get_schedule():
-    project_id = "ninghai-ccai"
-    dataset_id = "ptp_demo"
-    table_id = "simulated_schedule"
+    project_id = os.environ.get("BQ_PROJECT_ID", "ninghai-ccai")
+    dataset_id = os.environ.get("BQ_DATASET_ID", "ptp_demo")
+    table_id = os.environ.get("BQ_SCHEDULE_TABLE_ID", "simulated_schedule")
     
     client = bigquery.Client(project=project_id)
     query = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
