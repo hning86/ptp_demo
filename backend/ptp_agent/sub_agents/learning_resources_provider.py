@@ -23,22 +23,6 @@ def get_past_incidents(task: str) -> str:
         rows = []
         for row in results:
             rows.append(dict(row))
-            
-        if task and task != "General":
-            # Score each row based on keyword overlap with task
-            task_words = set(task.lower().split())
-            for row in rows:
-                row_text = f"{row['task']} {row['incident']} {row['type']} {row['key_focus']}".lower()
-                score = sum(1 for word in task_words if word in row_text)
-                row['_score'] = score
-                
-            # Sort by score descending
-            rows.sort(key=lambda x: x.get('_score', 0), reverse=True)
-            
-            # Clean up score and limit to 2
-            for row in rows:
-                row.pop('_score', None)
-            rows = rows[:2]
                 
         return json.dumps(rows, indent=2)
     except Exception as e:
@@ -59,7 +43,7 @@ learning_resources_provider = Agent(
     Provide learning resources for the safety topic, which are related to the task. First, use the get_past_incidents tool to retrieve past incidents for the task. Also use get_scissor_lift_video_link to get the video link. Then display the following as a list of resources: 
     - [Toolbox doc](https://examples.com/doc_place_holder.docx)
     - Training video (Provide the link retrieved by get_scissor_lift_video_link)
-    - List past relevant incidents (from the get_past_incidents tool in simple one-line-bullet-points format. No more than one sentence per line with a link to the full report).
+    - List past relevant incidents (from the get_past_incidents tool, but ONLY select the relevant ones from its full returns, in simple one-line-bullet-points format. No more than one sentence per line with a link to the full report).
 
     Stops and ask user to take some time to review the above materials. Once the user is ready, continue with the next step by using transfer action.
         
