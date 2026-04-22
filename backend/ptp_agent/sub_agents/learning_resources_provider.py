@@ -23,6 +23,22 @@ def get_past_incidents(task: str) -> str:
         rows = []
         for row in results:
             rows.append(dict(row))
+            
+        if task and task != "General":
+            # Score each row based on keyword overlap with task
+            task_words = set(task.lower().split())
+            for row in rows:
+                row_text = f"{row['task']} {row['incident']} {row['type']} {row['key_focus']}".lower()
+                score = sum(1 for word in task_words if word in row_text)
+                row['_score'] = score
+                
+            # Sort by score descending
+            rows.sort(key=lambda x: x.get('_score', 0), reverse=True)
+            
+            # Clean up score and limit to 2
+            for row in rows:
+                row.pop('_score', None)
+            rows = rows[:2]
                 
         return json.dumps(rows, indent=2)
     except Exception as e:
