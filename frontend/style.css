@@ -628,6 +628,15 @@ body {
     transform: translateX(-50%) translateY(-5px);
 }
 
+.presenter-actions .quick-btn:first-child::after {
+    left: 0;
+    transform: translateX(0);
+}
+
+.presenter-actions .quick-btn:first-child:hover::after {
+    transform: translateX(0) translateY(-5px);
+}
+
 /* Markdown Content Styling */
 .message-bubble p {
     margin-bottom: 8px;
