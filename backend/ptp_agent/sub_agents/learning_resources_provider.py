@@ -14,17 +14,7 @@ def get_past_incidents(task: str) -> str:
     
     client = bigquery.Client(project=project_id)
     
-    # If task is provided, try to filter by task or incident content
-    # Otherwise return all
-    if task and task != "General":
-        query_str = f"""
-            SELECT * FROM `{project_id}.{dataset_id}.{table_id}`
-            WHERE LOWER(task) LIKE LOWER('%{task}%') 
-               OR LOWER(incident) LIKE LOWER('%{task}%')
-               OR LOWER(type) LIKE LOWER('%{task}%')
-        """
-    else:
-        query_str = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
+    query_str = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
         
     try:
         query_job = client.query(query_str)
@@ -33,14 +23,6 @@ def get_past_incidents(task: str) -> str:
         rows = []
         for row in results:
             rows.append(dict(row))
-            
-        # If no results found with filter, fallback to all records
-        if not rows and task and task != "General":
-            query_all = f"SELECT * FROM `{project_id}.{dataset_id}.{table_id}`"
-            query_job = client.query(query_all)
-            results = query_job.result()
-            for row in results:
-                rows.append(dict(row))
                 
         return json.dumps(rows, indent=2)
     except Exception as e:
