@@ -70,8 +70,6 @@ The experience follows a structured daily workflow:
 | **`plan_reassessor`** | `search_safety_guideline` | Vertex AI RAG (Safety Requirement PDFs) |
 | **`shift_wrapper`** | *Implicit Collection* | Form Payload state |
 
-- **`index.html`**: Embedded interactive viewer styling responsive checklists, real-time mock connection events, and Presenter action templates.
-
 ## Running Locally
 
 ### 1. Launch Integrated Application Server
@@ -86,9 +84,20 @@ Simply click and interact online at: [http://localhost:8000](http://localhost:80
 
 ---
 
+## Deployment & Versioning
+
+The application includes automated version tracking:
+- **UI Visibility**: The current version number is visible in the web interface header.
+- **Auto-Increment**: Running `utils/deploy.sh` automatically bumps the patch version (via `utils/increment_version.py`) and commits the update to git before deploying to Google Cloud Run.
+
+```bash
+# Deploy to Cloud Run (increments version & commits automatically)
+./utils/deploy.sh
+```
+
 ## Remote Cloud Access (Local Proxying)
 
-Once successfully deployed to Google Cloud Run using `./deploy.sh`, you can securely bridge the hosted service back to your workstation via `gcloud proxy` without requiring manual authorization redirects:
+Once successfully deployed to Google Cloud Run, you can securely bridge the hosted service back to your workstation via `gcloud proxy` without requiring manual authorization redirects:
 
 ```bash
 gcloud run services proxy craft-ptp-demo --region us-central1 --port 8000

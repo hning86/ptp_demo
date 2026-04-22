@@ -1,26 +1,33 @@
 from google.adk.agents import Agent
 from .shared import transfer_action, common_instruction, DEFAULT_MODEL
 
+import json
+
 def get_past_incidents(task: str) -> str:
     """
     Retrieve past incidents from Iris database for a given task.
     """
-    return """
-    [Iris Incident Report #IRIS-2025-0302]
-    Date: 2025-03-02 2:39PM
-    Task: Electrical Work / Scissor Lift Operation
-    Incident: Electrician was working in the DC1 east zone when his scissor lift came in contact with a nearby ladder crushing the ladder on impact. No worker was using the ladder.
-    Type: Near Miss
-    Key Focus: Barricades requirements, Spotters & Banksperson requirements.
-    Suggested Resource: OSHA Toolbox Talk on working around tight spaces with scissor lifts.
-
-    [Iris Incident Report #IRIS-2024-0623]
-    Date: 2024-06-23 3:45PM
-    Task: Overhead Cable Pulling
-    Incident: Worker was working on overhead cable pulling when he felt a sharp pain in his left shoulder.
-    Type: Injury / Ergonomic Hazard
-    Suggested Resource: OSHA Worksite Ergonomics Guide (https://www.oshaeducationcenter.com/worksite-ergonomics-guide/)
-    """
+    incidents = [
+        {
+            "id": "IRIS-2025-0302",
+            "date": "2025-03-02 2:39PM",
+            "task": "Electrical Work / Scissor Lift Operation",
+            "incident": "Electrician was working in the DC1 east zone when his scissor lift came in contact with a nearby ladder crushing the ladder on impact. No worker was using the ladder.",
+            "type": "Near Miss",
+            "key_focus": "Barricades requirements, Spotters & Banksperson requirements.",
+            "suggested_resource": "OSHA Toolbox Talk on working around tight spaces with scissor lifts."
+        },
+        {
+            "id": "IRIS-2024-0623",
+            "date": "2024-06-23 3:45PM",
+            "task": "Overhead Cable Pulling",
+            "incident": "Worker was working on overhead cable pulling when he felt a sharp pain in his left shoulder.",
+            "type": "Injury / Ergonomic Hazard",
+            "key_focus": "Ergonomics",
+            "suggested_resource": "OSHA Worksite Ergonomics Guide (https://www.oshaeducationcenter.com/worksite-ergonomics-guide/)"
+        }
+    ]
+    return json.dumps(incidents, indent=2)
 
 def get_scissor_lift_video_link() -> str:
     """

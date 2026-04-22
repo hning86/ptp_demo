@@ -52,14 +52,18 @@
             <div class="data-sources-group">
                 <h3>Data sources</h3>
                 <button class="sidebar-btn" id="show-schedule-btn">
-                    📅 View P6 Schedule
+                    📅 P6 Schedule
                 </button>
                 <button class="sidebar-btn" id="show-docs-btn">
-                    📚 Safety Documents
+                    📚 TSS Documents
+                    </button>
+                    <button class="sidebar-btn" id="show-iris-btn">
+                        🗄️ Iris Incidents
                 </button>
                 <button class="sidebar-btn" id="show-weather-btn">
-                    🌤 View Weather
+                    🌤 Current Weather
                 </button>
+                
             </div>
             <div class="system-log" id="activity-log">
                 <h3>System Actions</h3>
@@ -130,6 +134,15 @@
         </div>
     </div>
 
+    <div id="iris-pane" class="flyout-pane">
+        <div class="pane-header">
+            <h3>Iris Database Logs</h3>
+            <button id="close-iris-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="pane-content" id="iris-content">
+            <!-- Iris logs will be inserted here -->
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="module" src="app.js"></script>
 </body>

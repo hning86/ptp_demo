@@ -22,7 +22,7 @@ def search_osha_guidelines(query: str) -> str:
     
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=DEFAULT_MODEL,
             contents=full_query,
             config=types.GenerateContentConfig(
                 tools=[types.Tool(google_search=types.GoogleSearch())]
@@ -45,7 +45,7 @@ hazard_mitigator = Agent(
     
     You must use the `search_safety_guideline` tool to find specific hazards and controls from the Safety Requirements document. You must strictly use the Safety Requirements content returned by the tool as the main reference. 
     
-    You can also augment your analysis with information from OSHA using the `search_osha_guidelines` tool. Please provide citation (including file name, section numbers, or OSHA standard codes) or reference to the specific content found when you mention a specific hazard and mitigation.
+    You can also augment your analysis with information from OSHA using the `search_osha_guidelines` tool. Please provide citation (including file name, section numbers from the safety documents, or OSHA web URL, if any) or reference to the specific content found when you mention a specific hazard and mitigation.
     
     Also be concise and to the point. Don't list more than 5 risks and their mitigations. If more than 5 risks are found, just list the top 5. Make sure at least one of them is from Energy Wheel PDF if applicable.
 
