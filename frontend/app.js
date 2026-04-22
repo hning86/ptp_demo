@@ -366,6 +366,9 @@ if (showWeatherBtn && weatherPane && closeWeatherBtn) {
 if (showIrisBtn && irisPane && closeIrisBtn) {
     showIrisBtn.addEventListener("click", async () => {
         closeAllPanes();
+        
+        if (irisPane) irisPane.classList.add("open");
+        
         const irisContent = document.getElementById("iris-content");
         if (irisContent) {
             irisContent.innerHTML = "<p>Loading Iris database...</p>";
@@ -395,7 +398,6 @@ if (showIrisBtn && irisPane && closeIrisBtn) {
                 irisContent.innerHTML = `<p>Error loading Iris logs: ${err.message}</p>`;
             }
         }
-        irisPane.classList.add("open");
     });
 
     closeIrisBtn.addEventListener("click", () => {
