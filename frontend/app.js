@@ -293,6 +293,9 @@ const showIrisBtn = document.getElementById("show-iris-btn");
 const closeIrisBtn = document.getElementById("close-iris-btn");
 const irisPane = document.getElementById("iris-pane");
 
+let weatherCache = null;
+let irisCache = null;
+
 function closeAllPanes() {
     if (schedulePane) schedulePane.classList.remove("open");
     if (docsPane) docsPane.classList.remove("open");
@@ -332,30 +335,41 @@ if (showWeatherBtn && weatherPane && closeWeatherBtn) {
         closeAllPanes();
         const weatherContent = document.getElementById("weather-content");
         if (weatherContent) {
-            weatherContent.innerHTML = "<p>Loading weather advisory...</p>";
-            try {
-                const res = await fetch("/weather");
-                const data = await res.json();
-                weatherContent.innerHTML = `
-                    <div class="weather-card">
-                        <div class="weather-header">
-                            <span class="weather-icon">🌧️</span>
-                            <div class="weather-meta">
-                                <h4>Weather Advisory</h4>
-                                <span class="weather-status">Active Staging Conditions</span>
-                            </div>
-                        </div>
-                        <div class="weather-body">
-                            <p>${data.weather}</p>
-                        </div>
-                    </div>
-                `;
-            } catch (err) {
-                weatherContent.innerHTML = `<p>Error loading weather: ${err.message}</p>`;
+            if (weatherCache) {
+                renderWeatherHTML(weatherCache);
+            } else {
+                weatherContent.innerHTML = "<p>Loading weather advisory...</p>";
+                try {
+                    const res = await fetch("/weather");
+                    const data = await res.json();
+                    weatherCache = data;
+                    renderWeatherHTML(weatherCache);
+                } catch (err) {
+                    weatherContent.innerHTML = `<p>Error loading weather: ${err.message}</p>`;
+                }
             }
         }
         weatherPane.classList.add("open");
     });
+
+    function renderWeatherHTML(data) {
+        const weatherContent = document.getElementById("weather-content");
+        if (!weatherContent) return;
+        weatherContent.innerHTML = `
+            <div class="weather-card">
+                <div class="weather-header">
+                    <span class="weather-icon">🌧️</span>
+                    <div class="weather-meta">
+                        <h4>Weather Advisory</h4>
+                        <span class="weather-status">Active Staging Conditions</span>
+                    </div>
+                </div>
+                <div class="weather-body">
+                    <p>${data.weather}</p>
+                </div>
+            </div>
+        `;
+    }
 
     closeWeatherBtn.addEventListener("click", () => {
         weatherPane.classList.remove("open");
@@ -371,34 +385,43 @@ if (showIrisBtn && irisPane && closeIrisBtn) {
         
         const irisContent = document.getElementById("iris-content");
         if (irisContent) {
-            irisContent.innerHTML = "<p>Loading Iris database...</p>";
-            try {
-                const res = await fetch("/iris-logs");
-                const data = await res.json();
-                
-                const incidents = Array.isArray(data) ? data : [];
-                
-                let html = '';
-                incidents.forEach(item => {
-                    html += `
-                        <div class="schedule-card">
-                            <h4 style="margin-bottom: 10px; color: var(--primary-blue);">${item.id}</h4>
-                            <p style="margin-bottom: 6px;"><span class="label">Task:</span> ${item.task}</p>
-                            <p style="margin-bottom: 6px;"><span class="label">Date:</span> ${item.date}</p>
-                            <p style="margin-bottom: 6px;"><span class="label">Type:</span> ${item.type}</p>
-                            <p style="margin-bottom: 8px;"><span class="label">Incident:</span> ${item.incident}</p>
-                            ${item.key_focus ? `<p style="margin-bottom: 6px;"><span class="label">Key Focus:</span> ${item.key_focus}</p>` : ''}
-                            ${item.suggested_resource ? `<p style="margin-bottom: 6px;"><span class="label">Resource:</span> ${item.suggested_resource}</p>` : ''}
-                        </div>
-                    `;
-                });
-                
-                irisContent.innerHTML = html || "<p>No logs found.</p>";
-            } catch (err) {
-                irisContent.innerHTML = `<p>Error loading Iris logs: ${err.message}</p>`;
+            if (irisCache) {
+                renderIrisHTML(irisCache);
+            } else {
+                irisContent.innerHTML = "<p>Loading Iris database...</p>";
+                try {
+                    const res = await fetch("/iris-logs");
+                    const data = await res.json();
+                    irisCache = data;
+                    renderIrisHTML(irisCache);
+                } catch (err) {
+                    irisContent.innerHTML = `<p>Error loading Iris logs: ${err.message}</p>`;
+                }
             }
         }
     });
+
+    function renderIrisHTML(data) {
+        const irisContent = document.getElementById("iris-content");
+        if (!irisContent) return;
+        
+        const incidents = Array.isArray(data) ? data : [];
+        let html = '';
+        incidents.forEach(item => {
+            html += `
+                <div class="schedule-card">
+                    <h4 style="margin-bottom: 10px; color: var(--primary-blue);">${item.id}</h4>
+                    <p style="margin-bottom: 6px;"><span class="label">Task:</span> ${item.task}</p>
+                    <p style="margin-bottom: 6px;"><span class="label">Date:</span> ${item.date}</p>
+                    <p style="margin-bottom: 6px;"><span class="label">Type:</span> ${item.type}</p>
+                    <p style="margin-bottom: 8px;"><span class="label">Incident:</span> ${item.incident}</p>
+                    ${item.key_focus ? `<p style="margin-bottom: 6px;"><span class="label">Key Focus:</span> ${item.key_focus}</p>` : ''}
+                    ${item.suggested_resource ? `<p style="margin-bottom: 6px;"><span class="label">Resource:</span> ${item.suggested_resource}</p>` : ''}
+                </div>
+            `;
+        });
+        irisContent.innerHTML = html || "<p>No logs found.</p>";
+    }
 
     closeIrisBtn.addEventListener("click", () => {
         irisPane.classList.remove("open");

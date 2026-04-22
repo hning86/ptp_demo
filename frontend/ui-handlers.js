@@ -158,9 +158,18 @@ export function handleScriptTriggers(agentText) {
     }
 }
 
+let scheduleCache = null;
+let docsCache = null;
+
 export async function renderSchedule() {
     const scheduleContent = document.getElementById("schedule-content");
     if (!scheduleContent) return;
+    
+    if (scheduleCache) {
+        renderScheduleHTML(scheduleCache);
+        return;
+    }
+    
     scheduleContent.innerHTML = "<p>Loading schedule...</p>";
     try {
         const response = await fetch("/schedule");
@@ -169,27 +178,40 @@ export async function renderSchedule() {
             scheduleContent.innerHTML = `<p>Error loading schedule: ${data.error}</p>`;
             return;
         }
-        scheduleContent.innerHTML = "";
-        data.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "schedule-card";
-            card.innerHTML = `
-                <h4>${item.description}</h4>
-                <p><span class="label">Task ID:</span> ${item.task_id}</p>
-                <p><span class="label">Dates:</span> ${item.start_date} to ${item.end_date}</p>
-                <p><span class="label">Location:</span> ${item.location}</p>
-                <p><span class="label">Foreperson:</span> ${item.crew_foreperson}</p>
-            `;
-            scheduleContent.appendChild(card);
-        });
+        scheduleCache = data;
+        renderScheduleHTML(scheduleCache);
     } catch (err) {
         scheduleContent.innerHTML = `<p>Error loading schedule: ${err.message}</p>`;
     }
 }
 
+function renderScheduleHTML(data) {
+    const scheduleContent = document.getElementById("schedule-content");
+    if (!scheduleContent) return;
+    scheduleContent.innerHTML = "";
+    data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "schedule-card";
+        card.innerHTML = `
+            <h4>${item.description}</h4>
+            <p><span class="label">Task ID:</span> ${item.task_id}</p>
+            <p><span class="label">Dates:</span> ${item.start_date} to ${item.end_date}</p>
+            <p><span class="label">Location:</span> ${item.location}</p>
+            <p><span class="label">Foreperson:</span> ${item.crew_foreperson}</p>
+        `;
+        scheduleContent.appendChild(card);
+    });
+}
+
 export async function renderDocs() {
     const docsContent = document.getElementById("docs-content");
     if (!docsContent) return;
+    
+    if (docsCache) {
+        renderDocsHTML(docsCache);
+        return;
+    }
+    
     docsContent.innerHTML = "<p>Loading documents...</p>";
     try {
         const response = await fetch("/safety-docs");
@@ -198,17 +220,24 @@ export async function renderDocs() {
             docsContent.innerHTML = `<p>Error loading documents: ${data.error}</p>`;
             return;
         }
-        docsContent.innerHTML = "";
-        data.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "schedule-card";
-            card.innerHTML = `
-                <h4><a href="${item.url}" target="_blank" style="color: var(--primary-blue); text-decoration: none;">${item.title}</a></h4>
-                <p><span class="label">Category:</span> ${item.category}</p>
-            `;
-            docsContent.appendChild(card);
-        });
+        docsCache = data;
+        renderDocsHTML(docsCache);
     } catch (err) {
         docsContent.innerHTML = `<p>Error loading documents: ${err.message}</p>`;
     }
+}
+
+function renderDocsHTML(data) {
+    const docsContent = document.getElementById("docs-content");
+    if (!docsContent) return;
+    docsContent.innerHTML = "";
+    data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "schedule-card";
+        card.innerHTML = `
+            <h4><a href="${item.url}" target="_blank" style="color: var(--primary-blue); text-decoration: none;">${item.title}</a></h4>
+            <p><span class="label">Category:</span> ${item.category}</p>
+        `;
+        docsContent.appendChild(card);
+    });
 }
