@@ -1,6 +1,9 @@
+from datetime import date
 from google.adk.agents import Agent
 
 from .shared import transfer_action, common_instruction, DEFAULT_MODEL
+
+today_str = date.today().strftime('%B %d, %Y')
 
 ptp_generator = Agent(
     name="ptp_generator",
@@ -17,7 +20,7 @@ ptp_generator = Agent(
 |---|---|
 | **Activity Name** | [Agent to fill] |
 | **DFOW** | [Agent to fill] |
-| **Date** | [Agent to fill] |
+| **Date** | {today_str} |
 
 | Step | Operational Step Description | Tools & Equipment | Hazards & Mitigations | Quality Expectations |
 |---|---|---|---|---|

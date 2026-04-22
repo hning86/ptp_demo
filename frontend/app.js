@@ -222,6 +222,16 @@ fetch('/version.json')
 // Trigger automated initial handshake
 async function triggerHiddenGreeting() {
     const activeLayer = document.getElementById("chat-scene-1");
+    
+    // Display morning huddle image
+    const imgDiv = document.createElement("div");
+    imgDiv.className = "message-bubble agent";
+    imgDiv.innerHTML = '<img src="images/morning_huddle.png" alt="Morning Huddle" style="max-width: 100%; border-radius: 8px; margin: 10px 0;">';
+    if (activeLayer) {
+        activeLayer.appendChild(imgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
     const agentDiv = document.createElement("div");
     agentDiv.className = "message-bubble agent thinking";
     agentDiv.innerHTML = '<span class="typing-indicator"><span></span><span></span><span></span></span>';
