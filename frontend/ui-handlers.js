@@ -158,8 +158,6 @@ export function handleScriptTriggers(agentText) {
     }
 }
 
-const USE_TIMELINE = true; // Set to false to revert to old card UI
-
 let scheduleCache = null;
 let docsCache = null;
 
@@ -191,41 +189,18 @@ function renderScheduleHTML(data) {
     const scheduleContent = document.getElementById("schedule-content");
     if (!scheduleContent) return;
     scheduleContent.innerHTML = "";
-    
-    if (USE_TIMELINE) {
-        const container = document.createElement("div");
-        container.className = "timeline-container";
-        
-        data.forEach(item => {
-            const timelineItem = document.createElement("div");
-            timelineItem.className = "timeline-item";
-            timelineItem.innerHTML = `
-                <div class="timeline-marker"></div>
-                <div class="timeline-content">
-                    <h4>${item.description}</h4>
-                    <p><span class="label">Task ID:</span> ${item.task_id}</p>
-                    <p><span class="label">Dates:</span> ${item.start_date} to ${item.end_date}</p>
-                    <p><span class="label">Location:</span> ${item.location}</p>
-                    <p><span class="label">Foreperson:</span> ${item.crew_foreperson}</p>
-                </div>
-            `;
-            container.appendChild(timelineItem);
-        });
-        scheduleContent.appendChild(container);
-    } else {
-        data.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "schedule-card";
-            card.innerHTML = `
-                <h4>${item.description}</h4>
-                <p><span class="label">Task ID:</span> ${item.task_id}</p>
-                <p><span class="label">Dates:</span> ${item.start_date} to ${item.end_date}</p>
-                <p><span class="label">Location:</span> ${item.location}</p>
-                <p><span class="label">Foreperson:</span> ${item.crew_foreperson}</p>
-            `;
-            scheduleContent.appendChild(card);
-        });
-    }
+    data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "schedule-card";
+        card.innerHTML = `
+            <h4>${item.description}</h4>
+            <p><span class="label">Task ID:</span> ${item.task_id}</p>
+            <p><span class="label">Dates:</span> ${item.start_date} to ${item.end_date}</p>
+            <p><span class="label">Location:</span> ${item.location}</p>
+            <p><span class="label">Foreperson:</span> ${item.crew_foreperson}</p>
+        `;
+        scheduleContent.appendChild(card);
+    });
 }
 
 export async function renderDocs() {
