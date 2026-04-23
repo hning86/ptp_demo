@@ -291,9 +291,12 @@ function closeAllPanes() {
 // Schedule Pane Logic
 if (showScheduleBtn && schedulePane && closeScheduleBtn) {
     showScheduleBtn.addEventListener("click", () => {
+        const isOpen = schedulePane.classList.contains("open");
         closeAllPanes();
-        renderSchedule();
-        schedulePane.classList.add("open");
+        if (!isOpen) {
+            renderSchedule();
+            schedulePane.classList.add("open");
+        }
     });
 
     closeScheduleBtn.addEventListener("click", () => {
@@ -304,9 +307,12 @@ if (showScheduleBtn && schedulePane && closeScheduleBtn) {
 // Docs Pane Logic
 if (showDocsBtn && docsPane && closeDocsBtn) {
     showDocsBtn.addEventListener("click", () => {
+        const isOpen = docsPane.classList.contains("open");
         closeAllPanes();
-        renderDocs();
-        docsPane.classList.add("open");
+        if (!isOpen) {
+            renderDocs();
+            docsPane.classList.add("open");
+        }
     });
 
     closeDocsBtn.addEventListener("click", () => {
@@ -317,24 +323,27 @@ if (showDocsBtn && docsPane && closeDocsBtn) {
 // Weather Pane Logic
 if (showWeatherBtn && weatherPane && closeWeatherBtn) {
     showWeatherBtn.addEventListener("click", async () => {
+        const isOpen = weatherPane.classList.contains("open");
         closeAllPanes();
-        const weatherContent = document.getElementById("weather-content");
-        if (weatherContent) {
-            if (weatherCache) {
-                renderWeatherHTML(weatherCache);
-            } else {
-                weatherContent.innerHTML = "<p>Loading weather advisory...</p>";
-                try {
-                    const res = await fetch("/weather");
-                    const data = await res.json();
-                    weatherCache = data;
+        if (!isOpen) {
+            const weatherContent = document.getElementById("weather-content");
+            if (weatherContent) {
+                if (weatherCache) {
                     renderWeatherHTML(weatherCache);
-                } catch (err) {
-                    weatherContent.innerHTML = `<p>Error loading weather: ${err.message}</p>`;
+                } else {
+                    weatherContent.innerHTML = "<p>Loading weather advisory...</p>";
+                    try {
+                        const res = await fetch("/weather");
+                        const data = await res.json();
+                        weatherCache = data;
+                        renderWeatherHTML(weatherCache);
+                    } catch (err) {
+                        weatherContent.innerHTML = `<p>Error loading weather: ${err.message}</p>`;
+                    }
                 }
             }
+            weatherPane.classList.add("open");
         }
-        weatherPane.classList.add("open");
     });
 
     function renderWeatherHTML(data) {
@@ -364,23 +373,26 @@ if (showWeatherBtn && weatherPane && closeWeatherBtn) {
 // Iris Pane Logic
 if (showIrisBtn && irisPane && closeIrisBtn) {
     showIrisBtn.addEventListener("click", async () => {
+        const isOpen = irisPane.classList.contains("open");
         closeAllPanes();
         
-        if (irisPane) irisPane.classList.add("open");
-        
-        const irisContent = document.getElementById("iris-content");
-        if (irisContent) {
-            if (irisCache) {
-                renderIrisHTML(irisCache);
-            } else {
-                irisContent.innerHTML = "<p>Loading Iris database...</p>";
-                try {
-                    const res = await fetch("/iris-logs");
-                    const data = await res.json();
-                    irisCache = data;
+        if (!isOpen) {
+            if (irisPane) irisPane.classList.add("open");
+            
+            const irisContent = document.getElementById("iris-content");
+            if (irisContent) {
+                if (irisCache) {
                     renderIrisHTML(irisCache);
-                } catch (err) {
-                    irisContent.innerHTML = `<p>Error loading Iris logs: ${err.message}</p>`;
+                } else {
+                    irisContent.innerHTML = "<p>Loading Iris database...</p>";
+                    try {
+                        const res = await fetch("/iris-logs");
+                        const data = await res.json();
+                        irisCache = data;
+                        renderIrisHTML(irisCache);
+                    } catch (err) {
+                        irisContent.innerHTML = `<p>Error loading Iris logs: ${err.message}</p>`;
+                    }
                 }
             }
         }
