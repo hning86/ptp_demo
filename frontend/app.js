@@ -116,6 +116,9 @@ if (input && form) {
         const msg = input.value.trim();
         if (!msg) return;
 
+        const beacon = document.getElementById("presence-beacon");
+        if (beacon) beacon.setAttribute("data-status", "thinking");
+
         const activeLayer = document.getElementById("chat-scene-1");
         // Render user msg
         const userDiv = document.createElement("div");
@@ -179,11 +182,15 @@ if (input && form) {
             const parsedHtml = marked.parse(filteredText);
             agentDiv.innerHTML = embedSafetyDocs(embedYouTube(parsedHtml));
             handleScriptTriggers(accumulatedText);
-            
+            const beacon = document.getElementById("presence-beacon");
+            if (beacon) beacon.setAttribute("data-status", "idle");
             
             addLog("Received full streaming context.");
             
         } catch (error) {
+            const beacon = document.getElementById("presence-beacon");
+            if (beacon) beacon.setAttribute("data-status", "idle");
+
             addLog(`Error: ${error.message}`);
             agentDiv.classList.remove("thinking");
             agentDiv.innerHTML = marked.parse(`**Error:** ${error.message || error}`);
@@ -216,6 +223,9 @@ async function triggerHiddenGreeting() {
         activeLayer.appendChild(imgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
+
+    const beacon = document.getElementById("presence-beacon");
+    if (beacon) beacon.setAttribute("data-status", "thinking");
 
     const agentDiv = document.createElement("div");
     agentDiv.className = "message-bubble agent thinking";
@@ -254,7 +264,11 @@ async function triggerHiddenGreeting() {
         }
         agentDiv.innerHTML = embedSafetyDocs(marked.parse(accumulatedText));
         chatWindow.scrollTop = chatWindow.scrollHeight;
+        
+        if (beacon) beacon.setAttribute("data-status", "idle");
     } catch (err) {
+        if (beacon) beacon.setAttribute("data-status", "idle");
+        
         agentDiv.innerHTML = embedSafetyDocs(marked.parse("Good morning! Welcome to UNO3 construction management system. Ready for shift briefs?"));
     }
 }
@@ -398,26 +412,59 @@ if (showIrisBtn && irisPane && closeIrisBtn) {
         }
     });
 
+    const USE_TIMELINE = true; // Set to false to revert to old card UI
+
     function renderIrisHTML(data) {
         const irisContent = document.getElementById("iris-content");
         if (!irisContent) return;
         
         const incidents = Array.isArray(data) ? data : [];
-        let html = '';
-        incidents.forEach(item => {
-            html += `
-                <div class="schedule-card">
-                    <h4 style="margin-bottom: 10px; color: var(--primary-blue);">${item.id}</h4>
-                    <p style="margin-bottom: 6px;"><span class="label">Task:</span> ${item.task}</p>
-                    <p style="margin-bottom: 6px;"><span class="label">Date:</span> ${item.date}</p>
-                    <p style="margin-bottom: 6px;"><span class="label">Type:</span> ${item.type}</p>
-                    <p style="margin-bottom: 8px;"><span class="label">Incident:</span> ${item.incident}</p>
-                    ${item.key_focus ? `<p style="margin-bottom: 6px;"><span class="label">Key Focus:</span> ${item.key_focus}</p>` : ''}
-                    ${item.suggested_resource ? `<p style="margin-bottom: 6px;"><span class="label">Resource:</span> ${item.suggested_resource}</p>` : ''}
-                </div>
-            `;
-        });
-        irisContent.innerHTML = html || "<p>No logs found.</p>";
+        
+        if (USE_TIMELINE) {
+            let html = '<div class="timeline-container">';
+            incidents.forEach(item => {
+                let markerClass = 'near-miss';
+                const typeLower = item.type.toLowerCase();
+                if (typeLower.includes('injury') || typeLower.includes('ergonomic')) {
+                    markerClass = 'injury';
+                } else if (typeLower.includes('violation') || typeLower.includes('fire') || typeLower.includes('property')) {
+                    markerClass = 'violation';
+                }
+                
+                html += `
+                    <div class="timeline-item ${markerClass}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4 style="margin-bottom: 10px; color: var(--primary-blue);">${item.id}</h4>
+                            <p style="margin-bottom: 6px;"><span class="label">Task:</span> ${item.task}</p>
+                            <p style="margin-bottom: 6px;"><span class="label">Date:</span> ${item.date}</p>
+                            <p style="margin-bottom: 6px;"><span class="label">Type:</span> ${item.type}</p>
+                            <p style="margin-bottom: 8px;"><span class="label">Incident:</span> ${item.incident}</p>
+                            ${item.key_focus ? `<p style="margin-bottom: 6px;"><span class="label">Key Focus:</span> ${item.key_focus}</p>` : ''}
+                            ${item.suggested_resource ? `<p style="margin-bottom: 6px;"><span class="label">Resource:</span> ${item.suggested_resource}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            irisContent.innerHTML = html || "<p>No logs found.</p>";
+        } else {
+            let html = '';
+            incidents.forEach(item => {
+                html += `
+                    <div class="schedule-card">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-blue);">${item.id}</h4>
+                        <p style="margin-bottom: 6px;"><span class="label">Task:</span> ${item.task}</p>
+                        <p style="margin-bottom: 6px;"><span class="label">Date:</span> ${item.date}</p>
+                        <p style="margin-bottom: 6px;"><span class="label">Type:</span> ${item.type}</p>
+                        <p style="margin-bottom: 8px;"><span class="label">Incident:</span> ${item.incident}</p>
+                        ${item.key_focus ? `<p style="margin-bottom: 6px;"><span class="label">Key Focus:</span> ${item.key_focus}</p>` : ''}
+                        ${item.suggested_resource ? `<p style="margin-bottom: 6px;"><span class="label">Resource:</span> ${item.suggested_resource}</p>` : ''}
+                    </div>
+                `;
+            });
+            irisContent.innerHTML = html || "<p>No logs found.</p>";
+        }
     }
 
     closeIrisBtn.addEventListener("click", () => {
