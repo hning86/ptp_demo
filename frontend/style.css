@@ -24,6 +24,21 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 75% 25%, hsl(217, 91%, 90%) 0%, transparent 50%),
+                radial-gradient(circle at 25% 75%, hsl(43, 100%, 90%) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.6;
 }
 
 /* Persistent App Header */
@@ -32,9 +47,11 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px 32px;
-    background-color: var(--panel-bg);
+    background-color: hsla(0, 0%, 100%, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     z-index: 10;
 }
 
@@ -42,6 +59,36 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.presence-beacon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.presence-beacon[data-status="idle"] {
+    background-color: var(--success-green);
+    box-shadow: 0 0 10px var(--success-green);
+    animation: pulseIdle 2s infinite ease-in-out;
+}
+
+.presence-beacon[data-status="thinking"] {
+    background-color: var(--accent-gold);
+    box-shadow: 0 0 12px var(--accent-gold);
+    animation: pulseThinking 0.8s infinite ease-in-out;
+}
+
+@keyframes pulseIdle {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes pulseThinking {
+    0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 4px var(--accent-gold); }
+    50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 16px var(--accent-gold); }
 }
 
 .logo-symbol {
@@ -144,12 +191,15 @@ body {
 
 /* Sidebar Dashboard */
 .sidebar-controls {
-    background-color: var(--panel-bg);
+    background-color: hsla(0, 0%, 100%, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-right: 1px solid var(--border-color);
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow-y: auto;
 }
 
 .sidebar-controls h2 {
@@ -699,9 +749,11 @@ body {
     right: -400px; /* Hidden by default */
     width: 400px;
     height: 100%;
-    background-color: var(--panel-bg);
+    background-color: hsla(0, 0%, 100%, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-left: 1px solid var(--border-color);
-    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.08);
     z-index: 1000;
     transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
