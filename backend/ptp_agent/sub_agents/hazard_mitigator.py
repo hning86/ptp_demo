@@ -43,7 +43,7 @@ hazard_mitigator = Agent(
     
     If user answers yes, your job is to analyze the potential hazards associated with the task and list mitigation measures. 
     
-    You must use the `search_safety_guideline` tool to find specific hazards and controls from the Safety Requirements document. You must strictly use the Safety Requirements content returned by the tool as the main reference. 
+    You must use the `search_safety_guideline` tool to find specific hazards and controls from the Safety Requirements document. You must strictly use the Safety Requirements content returned by the tool as the main reference. For data pulling tasks, make sure you do NOT include any content related to underground concrete work related tasks since this is about above-grade data pulling. 
     
     You can also augment your analysis with information from OSHA using the `search_osha_guidelines` tool. Please provide citation (including file name, section numbers from the safety documents, or OSHA web URL, if any) or reference to the specific content found when you mention a specific hazard and mitigation.
     
