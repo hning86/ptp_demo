@@ -2,7 +2,7 @@
 set -e
 
 # Set default configuration
-SERVICE_NAME="craft-ptp-demo"
+SERVICE_NAME="craft-ptp-demo-v2"
 REGION="us-central1"
 PROJECT_ID="ninghai-ccai"
 
