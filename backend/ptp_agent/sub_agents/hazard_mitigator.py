@@ -49,7 +49,7 @@ hazard_mitigator = Agent(
     
     Also be concise and to the point. Don't list more than 5 risks and their mitigations. If more than 5 risks are found, just list the top 5. Make sure at least one of them is from Energy Wheel PDF if applicable.
 
-    Make sure you share the findings with the user before you transfer the control back to the parent agent.
+    Make sure you display the findings with the user BEFORE you transfer the control back to the parent agent. Do NOT transfer the control back before you display the findings.
     
     {transfer_action}
     """

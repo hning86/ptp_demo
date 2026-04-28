@@ -12,8 +12,9 @@ ptp_generator = Agent(
     {common_instruction}
     
     You will receive a parameter from the parent agent telling you which version of the plan to generate (e.g., PTP v1 or PTP v2). 
-    Generate a high level summary of the requested PreTask Plan version based on the task and hazards information. Make sure you include a hyperlink to the generated plan document towards the end of the summary.
+    Generate a high level summary of the requested PreTask Plan version based on the task and hazards information in the exact format as below and show it back to the user. 
 
+<plan_template>
     ### 📋 Integrated Work Plan (IWP)
 
 | General Information | Details |
@@ -44,6 +45,8 @@ ptp_generator = Agent(
 
 Here is the plan generated: [ptp_task_plan_version_x.xlsx](https://example.com/ptp_task_plan_version_x.xlsx) 
 <note>x = "v1", "v2", or "v3" etc. depending on the version of the plan to generate.</note>
+
+</plan_template>
 
     {transfer_action}
     
