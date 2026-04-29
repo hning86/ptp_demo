@@ -95,6 +95,10 @@ The application includes automated version tracking:
 ./utils/deploy.sh
 ```
 
+## Cost Estimation
+
+A detailed estimate of the costs associated with deploying this application to GCP is available in the [gcp_cost_estimate.md](./gcp_cost_estimate.md) file.
+
 ## Remote Cloud Access (Local Proxying)
 
 Once successfully deployed to Google Cloud Run, you can securely bridge the hosted service back to your workstation via `gcloud proxy` without requiring manual authorization redirects:
